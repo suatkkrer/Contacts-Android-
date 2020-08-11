@@ -3,12 +3,15 @@ package com.suatkkrer.contacts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +32,7 @@ public class SignUp extends AppCompatActivity {
 
 
     TextInputLayout signupName, signupMail, signupPassword;
+    Button signupButton, haveAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,8 @@ public class SignUp extends AppCompatActivity {
         signupMail = findViewById(R.id.signupMail);
         signupName = findViewById(R.id.signupName);
         signupPassword = findViewById(R.id.signupPassword);
+        signupButton = findViewById(R.id.signupButton);
+        haveAccount = findViewById(R.id.haveAccount);
 
         mAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
@@ -54,7 +60,14 @@ public class SignUp extends AppCompatActivity {
 
     public void haveAccount(View view) {
         Intent intent = new Intent(getApplicationContext(),LoginScreen.class);
-        startActivity(intent);
+        Pair[] pairs = new Pair[4];
+        pairs[0] = new Pair<View,String> (signupName,"logo_username");
+        pairs[1] = new Pair<View,String> (signupPassword,"logo_password");
+        pairs[2] = new Pair<View,String> (signupButton,"logo_login");
+        pairs[3] = new Pair<View,String> (haveAccount,"logo_newuser");
+
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUp.this,pairs);
+        startActivity(intent,options.toBundle());
     }
 
     private void CreateNewAccount()

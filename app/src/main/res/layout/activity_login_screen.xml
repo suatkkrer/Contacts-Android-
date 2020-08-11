@@ -14,7 +14,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:transitionName="logo_image"
-        android:src="@drawable/phonebook" />
+        android:src="@drawable/phoneblack" />
 
     <TextView
         android:id="@+id/logo_name"

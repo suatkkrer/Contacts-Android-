@@ -47,15 +47,14 @@ public class ContactList extends AppCompatActivity {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         linearLayout = findViewById(R.id.add_contact_linear);
 
-        adapter.AddFragment(new FragmentCall(),"");
         adapter.AddFragment(new FragmentContact(),"");
         adapter.AddFragment(new FragmentFav(),"");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_call);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_group);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_star);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_group);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setElevation(0);

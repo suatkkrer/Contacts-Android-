@@ -13,7 +13,7 @@
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:transitionName="logo_image"
-        android:src="@drawable/phonebook"/>
+        android:src="@drawable/phoneblack"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_marginBottom="8dp"
+            android:transitionName="logo_username"
             android:hint="E-mail Address">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -98,12 +99,14 @@
         android:text="SIGN UP"
         android:transitionName="logo_login"
         android:onClick="Sign"
+        android:id="@+id/signupButton"
         android:background="#000"
         android:textColor="#fff"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="haveAccount"
+        android:id="@+id/haveAccount"
         android:text="Already have an account? LOGIN "
         android:transitionName="logo_newuser"
         android:background="#00000000"/>
