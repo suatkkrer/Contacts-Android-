@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class add extends AppCompatActivity {
 
     TextInputLayout contactAdd,numberAdd;
@@ -22,11 +25,14 @@ public class add extends AppCompatActivity {
     String validUser;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
+    ArrayList arrayList = new ArrayList();
+    HashMap<String, Object> contactNumb = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+
 
         contactAdd = findViewById(R.id.contact_add);
         numberAdd = findViewById(R.id.phone_add);
@@ -45,12 +51,15 @@ public class add extends AppCompatActivity {
             Toast.makeText(this, "Name field or number field can not be empty", Toast.LENGTH_LONG).show();
         } else {
             Contact contact = new Contact(contactAdd.getEditText().getText().toString(),numberAdd.getEditText().getText().toString());
-            reference.child(validUser).child("contacts").setValue(contact);
+//            arrayList.add(contactAdd.getEditText().getText().toString());
+//            arrayList.add(numberAdd.getEditText().getText().toString());
+            contactNumb.put("name",contactAdd.getEditText().getText().toString());
+            contactNumb.put("phone",numberAdd.getEditText().getText().toString());
+            reference.child(validUser).child("contacts").push().setValue(contactNumb);
             Toast.makeText(this, "You have added your contact", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(add.this,ContactList.class);
+            startActivity(intent);
         }
-
-
-
     }
 
     public void cancel(View view) {

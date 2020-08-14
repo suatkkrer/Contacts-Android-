@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.MyViewHolder> {
@@ -23,55 +24,60 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
     Context mContext;
     List<Contact> mData;
     Dialog myDialog;
+    private ArrayList<String> userName;
+    private ArrayList<String> userMail;
 
-    public RecylerViewAdapter(Context mContext, List<Contact> mData) {
-        this.mContext = mContext;
-        this.mData = mData;
+    public RecylerViewAdapter(ArrayList<String> userName, ArrayList<String> userMail) {
+        this.userName = userName;
+        this.userMail = userMail;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v;
-        v = LayoutInflater.from(mContext).inflate(R.layout.item_contact,parent,false);
-        final MyViewHolder viewHolder = new MyViewHolder(v);
 
 
-        myDialog = new Dialog(mContext);
-        myDialog.setContentView(R.layout.dialog_contact);
-        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        View v;
+//        v = LayoutInflater.from(mContext).inflate(R.layout.item_contact,parent,false);
+//        final MyViewHolder viewHolder = new MyViewHolder(v);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = layoutInflater.inflate(R.layout.item_contact,parent,false);
 
 
 
+//        myDialog = new Dialog(mContext);
+//        myDialog.setContentView(R.layout.dialog_contact);
+//        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//
+//        viewHolder.item_contact.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                TextView dialog_name_tv = myDialog.findViewById(R.id.dialog_name_id);
+//                TextView dialog_phone_tv = myDialog.findViewById(R.id.dialog_phone_id);
+//                dialog_name_tv.setText(mData.get(viewHolder.getAdapterPosition()).getName());
+//                dialog_phone_tv.setText(mData.get(viewHolder.getAdapterPosition()).getPhone());
+//                Toast.makeText(mContext, "Test Click" + String.valueOf(viewHolder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+//                myDialog.show();
+//            }
+//        });
 
-        viewHolder.item_contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView dialog_name_tv = myDialog.findViewById(R.id.dialog_name_id);
-                TextView dialog_phone_tv = myDialog.findViewById(R.id.dialog_phone_id);
-                dialog_name_tv.setText(mData.get(viewHolder.getAdapterPosition()).getName());
-                dialog_phone_tv.setText(mData.get(viewHolder.getAdapterPosition()).getPhone());
-                Toast.makeText(mContext, "Test Click" + String.valueOf(viewHolder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
-                myDialog.show();
-            }
-        });
-
-        return viewHolder;
+        return new MyViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        holder.tv_name.setText(mData.get(position).getName());
-        holder.tv_phone.setText(mData.get(position).getPhone());
-
+        holder.tv_name.setText(userName.get(position));
+        holder.tv_phone.setText(userMail.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return userName.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{

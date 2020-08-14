@@ -1,8 +1,11 @@
 package com.suatkkrer.contacts;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
@@ -11,13 +14,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class ContactList extends AppCompatActivity {
 
@@ -27,8 +38,12 @@ public class ContactList extends AppCompatActivity {
     String validUser;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private ViewPagerAdapter adapter;
-    private LinearLayout linearLayout;
+    RecylerViewAdapter recylerViewAdapter;
+    ArrayList<String> userName;
+    ArrayList<String> userPhone;
+    RecyclerView recyclerView;
+    ListView listView;
+
 
 
     @Override
@@ -36,25 +51,67 @@ public class ContactList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
 
+        userName = new ArrayList<>();
+        userPhone = new ArrayList<>();
+
         mAuthorize = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         validUser = mAuthorize.getCurrentUser().getUid();
         reference = firebaseDatabase.getReference("Users");
+        listView = findViewById(R.id.liste);
+        recyclerView = findViewById(R.id.contact_recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recylerViewAdapter = new RecylerViewAdapter(userName,userPhone);
+        recyclerView.setAdapter(recylerViewAdapter);
+        getDataFirebase();
 
 
-        tabLayout = (TabLayout) findViewById(R.id.tablayout_id);
-        viewPager = (ViewPager) findViewById(R.id.viewpager_id);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        linearLayout = findViewById(R.id.add_contact_linear);
 
-        adapter.AddFragment(new FragmentContact(),"");
-        adapter.AddFragment(new FragmentFav(),"");
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+//        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
+//        listView.setAdapter(arrayAdapter);
+//        reference.child(validUser).child("contacts").addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                String value = snapshot.getValue(String.class);
+//                arrayList.add(value);
+//                System.out.println(value);
+//                arrayAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_group);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star);
+//
+//        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+//
+//        adapter.AddFragment(new FragmentContact(),"");
+//        adapter.AddFragment(new FragmentFav(),"");
+//        viewPager.setAdapter(adapter);
+//        tabLayout.setupWithViewPager(viewPager);
+//
+//
+//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_group);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_star);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setElevation(0);
@@ -84,11 +141,61 @@ public class ContactList extends AppCompatActivity {
             case R.id.add_contact:
                 Intent intent1 = new Intent(getApplicationContext(),add.class);
                 startActivity(intent1);
-                reference.child(validUser).setValue("Aaaaaa");
                 Toast.makeText(this, "sdfaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void getDataFirebase(){
+
+        DatabaseReference reference = firebaseDatabase.getReference("Users");
+        reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userName.clear();
+                userPhone.clear();
+                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                    Contact contact = snapshot1.getValue(Contact.class);
+                    if (contact.getName() != null && contact.getPhone() != null) {
+                        String txt = contact.getName();
+                        String txtphone = contact.getPhone();
+                        userName.add(txt);
+                        userPhone.add(txtphone);
+                    }
+                }
+                recylerViewAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
