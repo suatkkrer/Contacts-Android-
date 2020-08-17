@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -22,7 +23,7 @@ public class add extends AppCompatActivity {
     TextInputLayout contactAdd,numberAdd;
 
     FirebaseAuth mAuth;
-    String validUser;
+    String validUser,id;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
     ArrayList arrayList = new ArrayList();
@@ -50,12 +51,17 @@ public class add extends AppCompatActivity {
         if (TextUtils.isEmpty(contactAdd.getEditText().getText().toString()) || TextUtils.isEmpty(numberAdd.getEditText().getText().toString())){
             Toast.makeText(this, "Name field or number field can not be empty", Toast.LENGTH_LONG).show();
         } else {
-            Contact contact = new Contact(contactAdd.getEditText().getText().toString(),numberAdd.getEditText().getText().toString());
+
+
+            id = reference.push().getKey();
+//            Contact contact = new Contact(contactAdd.getEditText().getText().toString(),numberAdd.getEditText().getText().toString());
 //            arrayList.add(contactAdd.getEditText().getText().toString());
 //            arrayList.add(numberAdd.getEditText().getText().toString());
             contactNumb.put("name",contactAdd.getEditText().getText().toString());
             contactNumb.put("phone",numberAdd.getEditText().getText().toString());
-            reference.child(validUser).child("contacts").push().setValue(contactNumb);
+            contactNumb.put("id",id);
+//            contactNumb.put("id",id);
+            reference.child(validUser).child("contacts").child(id).setValue(contactNumb);
             Toast.makeText(this, "You have added your contact", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(add.this,ContactList.class);
             startActivity(intent);

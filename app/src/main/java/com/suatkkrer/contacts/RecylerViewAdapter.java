@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,10 +27,15 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
     Dialog myDialog;
     private ArrayList<String> userName;
     private ArrayList<String> userMail;
+//    private ArrayList<String> userID;
+    private OnNoteListener onNoteListener;
 
-    public RecylerViewAdapter(ArrayList<String> userName, ArrayList<String> userMail) {
+
+    public RecylerViewAdapter(ArrayList<String> userName, ArrayList<String> userMail,OnNoteListener onNoteListener) {
         this.userName = userName;
         this.userMail = userMail;
+//        this.userID = userid;
+        this.onNoteListener = onNoteListener;
     }
 
     @NonNull
@@ -43,7 +49,7 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
 
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_contact,parent,false);
-
+//        final MyViewHolder viewHolder = new MyViewHolder(view);
 
 
 //        myDialog = new Dialog(mContext);
@@ -63,7 +69,7 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
 //            }
 //        });
 
-        return new MyViewHolder(view);
+        return new MyViewHolder(view,onNoteListener);
 
     }
 
@@ -80,21 +86,32 @@ public class RecylerViewAdapter extends RecyclerView.Adapter<RecylerViewAdapter.
         return userName.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
         private LinearLayout item_contact;
         private TextView tv_name;
         private TextView tv_phone;
+        OnNoteListener onNoteListener;
 
-        public MyViewHolder(View itemView){
+        public MyViewHolder(View itemView,OnNoteListener onNoteListener){
             super(itemView);
 
             tv_name = itemView.findViewById(R.id.name_contact);
             tv_phone = itemView.findViewById(R.id.phone_contact);
             item_contact = itemView.findViewById(R.id.contact_item_id);
+            this.onNoteListener = onNoteListener;
 
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener.onNoteClick(getAdapterPosition());
 
         }
+    }
+    public interface  OnNoteListener{
+        void onNoteClick(int position);
     }
 }

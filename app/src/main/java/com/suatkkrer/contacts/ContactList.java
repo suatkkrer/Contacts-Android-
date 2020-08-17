@@ -30,17 +30,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ContactList extends AppCompatActivity {
+public class ContactList extends AppCompatActivity implements RecylerViewAdapter.OnNoteListener {
 
     private FirebaseAuth mAuthorize;
     DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
     String validUser;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     RecylerViewAdapter recylerViewAdapter;
     ArrayList<String> userName;
     ArrayList<String> userPhone;
+    ArrayList<String> userID;
+//    ArrayList<String> userID;
     RecyclerView recyclerView;
     ListView listView;
 
@@ -53,6 +53,7 @@ public class ContactList extends AppCompatActivity {
 
         userName = new ArrayList<>();
         userPhone = new ArrayList<>();
+        userID = new ArrayList<>();
 
         mAuthorize = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -60,10 +61,11 @@ public class ContactList extends AppCompatActivity {
         reference = firebaseDatabase.getReference("Users");
         listView = findViewById(R.id.liste);
         recyclerView = findViewById(R.id.contact_recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recylerViewAdapter = new RecylerViewAdapter(userName,userPhone);
-        recyclerView.setAdapter(recylerViewAdapter);
         getDataFirebase();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recylerViewAdapter = new RecylerViewAdapter(userName,userPhone,this);
+        recyclerView.setAdapter(recylerViewAdapter);
+
 
 
 
@@ -118,6 +120,7 @@ public class ContactList extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -133,15 +136,14 @@ public class ContactList extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.log_out:
-                mAuthorize.signOut();
-                finish();
-                Intent intent = new Intent(ContactList.this, LoginScreen.class);
+//                mAuthorize.signOut();
+//                finish();
+                Intent intent = new Intent(ContactList.this, EditActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.add_contact:
                 Intent intent1 = new Intent(getApplicationContext(),add.class);
                 startActivity(intent1);
-                Toast.makeText(this, "sdfaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -156,13 +158,16 @@ public class ContactList extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userName.clear();
                 userPhone.clear();
+                userID.clear();
                 for(DataSnapshot snapshot1 : snapshot.getChildren()){
                     Contact contact = snapshot1.getValue(Contact.class);
                     if (contact.getName() != null && contact.getPhone() != null) {
                         String txt = contact.getName();
                         String txtphone = contact.getPhone();
+                        String userid = contact.getId();
                         userName.add(txt);
                         userPhone.add(txtphone);
+                        userID.add(userid);
                     }
                 }
                 recylerViewAdapter.notifyDataSetChanged();
@@ -173,7 +178,17 @@ public class ContactList extends AppCompatActivity {
 
             }
         });
+    }
 
+    @Override
+    public void onNoteClick(int position) {
+        userName.get(position);
+        userPhone.get(position);
+        Intent intent = new Intent(getApplicationContext(),EditActivity.class);
+        intent.putExtra("name",userName.get(position));
+        intent.putExtra("phone",userPhone.get(position));
+        intent.putExtra("id",userID.get(position));
+        startActivity(intent);
     }
 }
 

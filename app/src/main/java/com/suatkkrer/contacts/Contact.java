@@ -4,13 +4,23 @@ public class Contact {
 
     private String Name;
     private String Phone;
+    private String Id;
 
     public Contact() {
     }
 
-    public Contact(String name, String phone) {
+    public Contact( String id,String name, String phone) {
         Name = name;
         Phone = phone;
+        Id = id;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 
     public String getName() {
