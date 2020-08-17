@@ -68,6 +68,9 @@ public class EditActivity extends AppCompatActivity {
         } else
         {
             update(id,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
+            Intent intent = new Intent(getApplicationContext(),ContactList.class);
+            Toast.makeText(this, "Contact updated successfully", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
         }
 
     }
@@ -78,8 +81,6 @@ public class EditActivity extends AppCompatActivity {
         Contact contact = new Contact(id,name,phone);
 
         databaseReference.setValue(contact);
-
-        Toast.makeText(this, "Contact updated successfully", Toast.LENGTH_SHORT).show();
 
         return true;
     }
