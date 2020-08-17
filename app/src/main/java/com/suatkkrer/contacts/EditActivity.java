@@ -13,13 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class EditActivity extends AppCompatActivity {
 
-    EditText name_id,phone_id;
+    TextInputLayout name_id,phone_id;
     private FirebaseAuth mAuthorize;
     String validUser;
     String id;
@@ -41,8 +42,8 @@ public class EditActivity extends AppCompatActivity {
         String phone = intent.getStringExtra("phone");
         id = intent.getStringExtra("id");
 
-        name_id.setText(name);
-        phone_id.setText(phone);
+        name_id.getEditText().setText(name);
+        phone_id.getEditText().setText(phone);
 
     }
 
@@ -61,12 +62,12 @@ public class EditActivity extends AppCompatActivity {
 
     public void updateData(View view) {
 
-        if (TextUtils.isEmpty(name_id.getText().toString()) || TextUtils.isEmpty(phone_id.getText().toString()))
+        if (TextUtils.isEmpty(name_id.getEditText().getText().toString()) || TextUtils.isEmpty(phone_id.getEditText().getText().toString()))
         {
             Toast.makeText(this, "Please enter name and phone number", Toast.LENGTH_SHORT).show();
         } else
         {
-            update(id,name_id.getText().toString(),phone_id.getText().toString());
+            update(id,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
         }
 
     }

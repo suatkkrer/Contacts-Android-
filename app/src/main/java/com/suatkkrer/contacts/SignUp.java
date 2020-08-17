@@ -104,7 +104,7 @@ public class SignUp extends AppCompatActivity {
                                 reference.child("Users").child(validUserId).setValue("");
 
 
-                                Intent mainPage = new Intent(SignUp.this,LoginScreen.class);
+                                Intent mainPage = new Intent(SignUp.this,ContactList.class);
                                 mainPage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
                                 startActivity(mainPage);
                                 finish();

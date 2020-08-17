@@ -136,9 +136,9 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
 
         switch (item.getItemId()) {
             case R.id.log_out:
-//                mAuthorize.signOut();
-//                finish();
-                Intent intent = new Intent(ContactList.this, EditActivity.class);
+                mAuthorize.signOut();
+                finish();
+                Intent intent = new Intent(ContactList.this, LoginScreen.class);
                 startActivity(intent);
                 return true;
             case R.id.add_contact:

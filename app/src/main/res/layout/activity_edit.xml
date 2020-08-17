@@ -25,24 +25,51 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"/>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/dialog_name_id"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contact Name"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Contact Name"
             android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
             android:textStyle="bold"
             android:textSize="24sp"
-            android:layout_marginTop="-10dp"/>
-        <EditText
-            android:id="@+id/dialog_phone_id"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="-10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Phone Number"
+            android:inputType="text"
+            android:textColor="@android:color/white"
+            android:textSize="22sp" />
+
+       </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dialog_phone_id"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:textSize="24sp"
+            android:hint="Phone Number"
+            android:textColorHint="@android:color/white"
             android:textColor="@android:color/white"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textSize="22sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/dialog_btn_call"
