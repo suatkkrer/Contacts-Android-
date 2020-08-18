@@ -4,14 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -29,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ContactList extends AppCompatActivity implements RecylerViewAdapter.OnNoteListener {
 
@@ -41,7 +48,9 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
     ArrayList<String> userPhone;
     ArrayList<String> userID;
 //    ArrayList<String> userID;
+    HashMap<String, Object> contactNumb = new HashMap<>();
     RecyclerView recyclerView;
+    String id;
     ListView listView;
 
 
@@ -145,6 +154,12 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
                 Intent intent1 = new Intent(getApplicationContext(),add.class);
                 startActivity(intent1);
                 return true;
+            case R.id.clearContacts:
+                clearContacts();
+                return true;
+            case R.id.importContacts:
+                bringContacts();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -189,6 +204,52 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
         intent.putExtra("phone",userPhone.get(position));
         intent.putExtra("id",userID.get(position));
         startActivity(intent);
+    }
+    public void bringContacts(){
+
+        if (ContextCompat.checkSelfPermission(ContactList.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+            String name = null;
+            String number = null;
+
+            ContentResolver contentResolver = getContentResolver();
+            Cursor phone = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null, null, null, ContactsContract.Contacts.DISPLAY_NAME);
+
+            ArrayList<String> contactList = new ArrayList<>();
+            ArrayList<String> contactList1 = new ArrayList<>();
+            String column = ContactsContract.Contacts.DISPLAY_NAME;
+            String col = ContactsContract.CommonDataKinds.Phone.NUMBER;
+
+            while (phone.moveToNext()) {
+
+                name = phone.getString(phone.getColumnIndex(column));
+                number = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                if (name != null && number != null) {
+//                contactNumb.clear();
+                    id = reference.push().getKey();
+
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+                            .child(validUser).child("contacts").child(id);
+//                contactNumb.put("name",name);
+//                contactNumb.put("phone",phone);
+//                contactNumb.put("id",id);
+
+                    Contact contact = new Contact(id, name, number);
+
+                    databaseReference.setValue(contact);
+                }
+            }
+            phone.close();
+        } else {
+            Toast.makeText(this, "Please Give Permission for importing contacts", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void clearContacts(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+                .child(validUser).child("contacts");
+        databaseReference.removeValue();
     }
 }
 

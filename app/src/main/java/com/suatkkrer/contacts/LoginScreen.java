@@ -2,10 +2,14 @@ package com.suatkkrer.contacts;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -55,6 +59,13 @@ public class LoginScreen extends AppCompatActivity {
         presentuser = mAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance().getReference();
         loginDialog = new ProgressDialog(this);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.READ_CONTACTS},1);
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.WRITE_CONTACTS},7);
+        }
     }
 
     public void SignUp(View view) {
