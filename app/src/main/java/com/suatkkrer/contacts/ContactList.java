@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -37,7 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ContactList extends AppCompatActivity implements RecylerViewAdapter.OnNoteListener {
+public class ContactList extends AppCompatActivity {
 
     private FirebaseAuth mAuthorize;
     DatabaseReference reference;
@@ -60,22 +62,15 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
 
-        userName = new ArrayList<>();
-        userPhone = new ArrayList<>();
-        userID = new ArrayList<>();
+
 
         mAuthorize = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         validUser = mAuthorize.getCurrentUser().getUid();
         reference = firebaseDatabase.getReference("Users");
-        listView = findViewById(R.id.liste);
-        recyclerView = findViewById(R.id.contact_recyclerview);
-        getDataFirebase();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recylerViewAdapter = new RecylerViewAdapter(userName,userPhone,this);
-        recyclerView.setAdapter(recylerViewAdapter);
-
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemReselectedListener);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ContactFragment()).commit();
 
 
 //        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
@@ -129,6 +124,28 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
 
     }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationItemReselectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    Fragment selectedFragment = null;
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.contactsNav:
+                            selectedFragment = new ContactFragment();
+                            break;
+                        case R.id.duplicateNav:
+                            selectedFragment = new DuplicateFragment();
+                            break;
+                        case R.id.settings:
+                            selectedFragment = new SettingsFragment();
+                            break;
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
+                    return true;
+                }
+            };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,46 +182,7 @@ public class ContactList extends AppCompatActivity implements RecylerViewAdapter
         }
     }
 
-    public void getDataFirebase(){
 
-        DatabaseReference reference = firebaseDatabase.getReference("Users");
-        reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userName.clear();
-                userPhone.clear();
-                userID.clear();
-                for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                    Contact contact = snapshot1.getValue(Contact.class);
-                    if (contact.getName() != null && contact.getPhone() != null) {
-                        String txt = contact.getName();
-                        String txtphone = contact.getPhone();
-                        String userid = contact.getId();
-                        userName.add(txt);
-                        userPhone.add(txtphone);
-                        userID.add(userid);
-                    }
-                }
-                recylerViewAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    @Override
-    public void onNoteClick(int position) {
-        userName.get(position);
-        userPhone.get(position);
-        Intent intent = new Intent(getApplicationContext(),EditActivity.class);
-        intent.putExtra("name",userName.get(position));
-        intent.putExtra("phone",userPhone.get(position));
-        intent.putExtra("id",userID.get(position));
-        startActivity(intent);
-    }
     public void bringContacts(){
 
         if (ContextCompat.checkSelfPermission(ContactList.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {

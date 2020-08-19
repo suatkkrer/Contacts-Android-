@@ -26,7 +26,6 @@ public class add extends AppCompatActivity {
     String validUser,id;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
-    ArrayList arrayList = new ArrayList();
     HashMap<String, Object> contactNumb = new HashMap<>();
 
     @Override

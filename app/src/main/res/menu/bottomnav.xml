@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/contactsNav"
+        android:icon="@drawable/personn"
+        android:title="Contacts"/>
+
+
+    <item
+        android:id="@+id/duplicateNav"
+        android:icon="@drawable/contactphone"
+        android:title="Duplicated"/>
+
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/settings"
+        android:title="Settings"/>
+
+</menu>
