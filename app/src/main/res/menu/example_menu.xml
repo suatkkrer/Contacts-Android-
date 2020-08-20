@@ -9,21 +9,4 @@
         android:icon="@drawable/add"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/importContacts"
-        android:title="Import My Contacts"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/clearContacts"
-        android:title="Clear All Contacts"
-        app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/log_out"
-        android:title="Log out"
-        app:showAsAction="never"/>
-
-
-
 </menu>

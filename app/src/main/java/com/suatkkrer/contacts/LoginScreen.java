@@ -60,6 +60,13 @@ public class LoginScreen extends AppCompatActivity {
         userReference = FirebaseDatabase.getInstance().getReference();
         loginDialog = new ProgressDialog(this);
 
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED)
         {
@@ -67,6 +74,8 @@ public class LoginScreen extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.WRITE_CONTACTS},7);
         }
     }
+
+
 
     public void SignUp(View view) {
 

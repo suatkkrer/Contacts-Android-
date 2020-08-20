@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,6 +63,12 @@ public class ContactList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.READ_CONTACTS},1);
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.WRITE_CONTACTS},7);
+        }
 
 
         mAuthorize = FirebaseAuth.getInstance();
@@ -160,26 +167,12 @@ public class ContactList extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        switch (item.getItemId()) {
-            case R.id.log_out:
-                mAuthorize.signOut();
-                finish();
-                Intent intent = new Intent(ContactList.this, LoginScreen.class);
-                startActivity(intent);
-                return true;
-            case R.id.add_contact:
-                Intent intent1 = new Intent(getApplicationContext(),add.class);
-                startActivity(intent1);
-                return true;
-            case R.id.clearContacts:
-                clearContacts();
-                return true;
-            case R.id.importContacts:
-                bringContacts();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.add_contact) {
+            Intent intent1 = new Intent(getApplicationContext(), add.class);
+            startActivity(intent1);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 
