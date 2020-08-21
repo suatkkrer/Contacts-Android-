@@ -12,8 +12,10 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +66,7 @@ public class SettingsFragment extends Fragment {
         listView = v.findViewById(R.id.settingsList);
 
         ArrayList<String> settings = new ArrayList<>();
-        settings.add("Import My Contacts to App");
+        settings.add("Import My Phone Book Contacts to App");
         settings.add("Export My All Contacts to Phone Book");
         settings.add("Delete My All Contacts");
         settings.add("Log out");
@@ -76,21 +78,33 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                      if (position == 0) {
+
+
                          if ( ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+
+
                              AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                              alert.setTitle("Are You Sure?");
                              alert.setMessage("You will upload your all contacts to application. Are you sure?");
                              alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
+
                                      bringContacts();
-                                     Toast.makeText(thisContext, "Your contacts are uploaded.", Toast.LENGTH_LONG).show();
+
+                                     Toast toast = Toast.makeText(getActivity(), "Your contacts are uploaded.", Toast.LENGTH_LONG);
+                                     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                     toast.show();
+
                                  }
                              });
                              alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
-                                     Toast.makeText(thisContext, "Your contacts are not uploaded.", Toast.LENGTH_LONG).show();
+                                     Toast toast = Toast.makeText(getActivity(), "Your contacts are not uploaded.", Toast.LENGTH_LONG);
+                                     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                     toast.show();
                                  }
                              });
                              alert.create().show();
@@ -124,18 +138,35 @@ public class SettingsFragment extends Fragment {
                              progressDialog.setCanceledOnTouchOutside(true);
                              progressDialog.show();
 
+                            Runnable progressRunnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.cancel();
+                                }
+                            };
+                             Handler handler = new Handler();
+                             handler.postDelayed(progressRunnable,3000);
+
 
                              DatabaseReference reference = firebaseDatabase.getReference("Users");
                              reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
                                  @Override
                                  public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+
                                      userName.clear();
                                      userPhone.clear();
                                      userID.clear();
                                      for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                                          Contact contact = snapshot1.getValue(Contact.class);
+
+
+
                                          if (contact.getName() != null && contact.getPhone() != null) {
+
+
+
+
                                              String txt = contact.getName();
                                              String txtphone = contact.getPhone();
                                              String userid = contact.getId();
@@ -177,12 +208,14 @@ public class SettingsFragment extends Fragment {
 
                                              }
                                              try {
-                                                 getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                                                 Context appContext = ContactList.getContextOfApplication();
+                                                 appContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
                                                  progressDialog.dismiss();
-                                                 Toast.makeText(thisContext, "Contacts uploaded to your phone book.", Toast.LENGTH_LONG).show();
+                                                 Toast toast = Toast.makeText(getActivity(), "Contacts uploaded to your phone book.", Toast.LENGTH_LONG);
+                                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                                 toast.show();
                                              } catch (Exception e) {
                                                  e.printStackTrace();
-                                                 Toast.makeText(getContext(), "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                  progressDialog.dismiss();
                                              }
                                          }
@@ -223,13 +256,18 @@ public class SettingsFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 clearContacts();
-                                Toast.makeText(thisContext, "Your all contacts are deleted.", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(getActivity(), "Your all contacts are deleted.", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                toast.show();
+
                             }
                         });
                         alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(thisContext, "Deleting process is cancelled", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(getActivity(), "Deleting process is cancelled", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                toast.show();
                             }
                         });
                         alert.create().show();
@@ -251,7 +289,9 @@ public class SettingsFragment extends Fragment {
                         alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(thisContext, "Logging out process is cancelled", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(getActivity(), "Logging out process is cancelled", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                toast.show();
                             }
                         });
                         alert.create().show();
@@ -295,6 +335,10 @@ public class SettingsFragment extends Fragment {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
+            Toast toast = Toast.makeText(getActivity(), "Please wait contacts are uploading...", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+            toast.show();
+
             String name = null;
             String number = null;
 
@@ -322,11 +366,15 @@ public class SettingsFragment extends Fragment {
                     Contact contact = new Contact(id, name, number);
 
                     databaseReference.setValue(contact);
+
+
                 }
             }
             phone.close();
         } else {
-            Toast.makeText(getContext(), "Please Give Permission for importing contacts", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(getActivity(), "Please Give Permission for importing contacts", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+            toast.show();
         }
     }
     public void clearContacts(){

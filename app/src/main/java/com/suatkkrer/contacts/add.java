@@ -53,9 +53,6 @@ public class add extends AppCompatActivity {
 
 
             id = reference.push().getKey();
-//            Contact contact = new Contact(contactAdd.getEditText().getText().toString(),numberAdd.getEditText().getText().toString());
-//            arrayList.add(contactAdd.getEditText().getText().toString());
-//            arrayList.add(numberAdd.getEditText().getText().toString());
             contactNumb.put("name",contactAdd.getEditText().getText().toString());
             contactNumb.put("phone",numberAdd.getEditText().getText().toString());
             contactNumb.put("id",id);
