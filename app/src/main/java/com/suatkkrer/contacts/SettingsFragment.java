@@ -53,9 +53,6 @@ public class SettingsFragment extends Fragment {
     ArrayList<String> userName;
     ArrayList<String> userPhone;
     ArrayList<String> userID;
-    private  int progress = 0;
-
-
 
     @Nullable
     @Override
