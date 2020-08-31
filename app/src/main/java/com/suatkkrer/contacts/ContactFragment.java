@@ -104,6 +104,7 @@ public class ContactFragment extends Fragment implements RecylerViewAdapter.OnNo
 
     @Override
     public void onNoteClick(int position) {
+
         userName.get(position);
         userPhone.get(position);
         Intent intent = new Intent(thisContext,EditActivity.class);

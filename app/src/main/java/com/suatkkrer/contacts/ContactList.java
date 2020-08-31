@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class ContactList extends AppCompatActivity {
+public class  ContactList extends AppCompatActivity {
 
     private FirebaseAuth mAuthorize;
     DatabaseReference reference;

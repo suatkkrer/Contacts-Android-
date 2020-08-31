@@ -48,6 +48,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void deleteContact(View view) {
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
                 .child(validUser).child("contacts").child(id);
         Intent intent = new Intent(getApplicationContext(),ContactList.class);
@@ -75,6 +76,7 @@ public class EditActivity extends AppCompatActivity {
 
     }
     public boolean update(String id,String name, String phone){
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
                 .child(validUser).child("contacts").child(id);
 
