@@ -50,6 +50,7 @@ public class SettingsFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     String validUser;
     String id;
+    String deleteId ;
     ArrayList<String> userName;
     ArrayList<String> userPhone;
     ArrayList<String> userID;
@@ -72,7 +73,7 @@ public class SettingsFragment extends Fragment {
         ArrayList<String> settings = new ArrayList<>();
         settings.add("Import My Phone Book Contacts to App");
         settings.add("Export My All Contacts to Phone Book");
-       // settings.add("Delete All Duplicated Names");
+        settings.add("Delete All Duplicated Names");
         settings.add("Delete My All Contacts");
         settings.add("Log out");
 
@@ -252,11 +253,11 @@ public class SettingsFragment extends Fragment {
                                          }
                                      }).show();
                          }
-                     } // else if (position ==2){
-                      //   getDataFirebase();
+                     }  else if (position ==2){
+                         getDataFirebase();
 
-                    // }
-                    else if (position == 2) {
+                     }
+                    else if (position == 3) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle(R.string.sureAre);
                         alert.setMessage(R.string.contactWillBe);
@@ -281,7 +282,7 @@ public class SettingsFragment extends Fragment {
                         alert.create().show();
                         
                      }
-                    else if (position == 3) {
+                    else if (position == 4) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle(R.string.AreSure);
                         alert.setMessage(R.string.LogOutt);
@@ -330,6 +331,8 @@ public class SettingsFragment extends Fragment {
         validUser = mAuthorize.getCurrentUser().getUid();
         reference = firebaseDatabase.getReference("Users");
 
+
+
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED)
         {
@@ -337,9 +340,14 @@ public class SettingsFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_CONTACTS},7);
         }
 
+
+
     }
 
     private void getDataFirebase() {
+
+        final DatabaseReference referenceDelete = firebaseDatabase.getReference("Users")
+                .child(validUser).child("contacts");
 
         DatabaseReference reference = firebaseDatabase.getReference("Users");
         reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
@@ -348,7 +356,7 @@ public class SettingsFragment extends Fragment {
                 userName.clear();
                 userPhone.clear();
                 userID.clear();
-                for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
                     if (contact.getName() != null && contact.getPhone() != null) {
                         String txt = contact.getName();
@@ -360,23 +368,29 @@ public class SettingsFragment extends Fragment {
                     }
                 }
 
-                for (int i = 0; i < userName.size() ; i++) {
-                    if (!userNameDuplicated.contains(userName.get(i))){
-                        userNameDuplicated.add((userName.get(i)));
-                        userPhoneDuplicated.add(userPhone.get(i));
-                        userIdDuplicated.add(userID.get(i));
-                    } else {
-                        userNameDuplicated2.add(userName.get(i));
-                        userPhoneDuplicated2.add(userPhone.get(i));
-                        userIdDuplicated2.add(userID.get(i));
+                for (int i = 0; i < userName.size(); i++) {
+                    if (userNameDuplicated2.contains(userName.get(i))) {
+                        break;
                     }
-                }
+                    for (int j = i + 1; j < userName.size(); j++) {
+                        if (userName.get(i).equals(userName.get(j)) && !userNameDuplicated2.contains(userName.get(i))) {
+                            userNameDuplicated2.add(userName.get(i));
+                            userPhoneDuplicated2.add(userPhone.get(i));
+                            userIdDuplicated2.add(userID.get(i));
+                            System.out.println(userID.get(i));
+                            deleteId = userID.get(i);
+                            referenceDelete.child(deleteId).removeValue();
+                        }
 
-                for (int i = 0; i < userIdDuplicated2.size() ; i++) {
-                    id = userIdDuplicated2.get(i);
-                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Users")
-                            .child(validUser).child("contacts").child(id);
-                    reference1.removeValue();
+                        if (userName.get(i).equals(userName.get(j))) {
+                            userNameDuplicated2.add(userName.get(j));
+                            userPhoneDuplicated2.add(userPhone.get(j));
+                            userIdDuplicated2.add(userID.get(j));
+                            deleteId = userID.get(j);
+                            referenceDelete.child(deleteId).removeValue();
+
+                        }
+                    }
                 }
             }
 

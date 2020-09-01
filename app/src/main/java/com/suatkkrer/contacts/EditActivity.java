@@ -43,6 +43,8 @@ public class EditActivity extends AppCompatActivity {
         String phone = intent.getStringExtra("phone");
         id = intent.getStringExtra("id");
 
+        System.out.println(id);
+
         name_id.getEditText().setText(name);
         phone_id.getEditText().setText(phone);
 
