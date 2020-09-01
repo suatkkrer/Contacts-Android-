@@ -377,7 +377,6 @@ public class SettingsFragment extends Fragment {
                             userNameDuplicated2.add(userName.get(i));
                             userPhoneDuplicated2.add(userPhone.get(i));
                             userIdDuplicated2.add(userID.get(i));
-                            System.out.println(userID.get(i));
                             deleteId = userID.get(i);
                             referenceDelete.child(deleteId).removeValue();
                         }
