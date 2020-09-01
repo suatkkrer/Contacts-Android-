@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -53,11 +54,14 @@ public class EditActivity extends AppCompatActivity {
                 .child(validUser).child("contacts").child(id);
         Intent intent = new Intent(getApplicationContext(),ContactList.class);
 
-        System.out.println(id);
+
         
         reference.removeValue();
 
-        Toast.makeText(this, "Contact is deleted", Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(getApplicationContext(), "Contact is deleted.", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+        toast.show();
+
         startActivity(intent);
     }
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -58,7 +59,10 @@ public class add extends AppCompatActivity {
             contactNumb.put("id",id);
 //            contactNumb.put("id",id);
             reference.child(validUser).child("contacts").child(id).setValue(contactNumb);
-            Toast.makeText(this, "You have added your contact", Toast.LENGTH_LONG).show();
+
+            Toast toast = Toast.makeText(getApplicationContext(), "You have added your contact.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+            toast.show();
             Intent intent = new Intent(add.this,ContactList.class);
             startActivity(intent);
         }
