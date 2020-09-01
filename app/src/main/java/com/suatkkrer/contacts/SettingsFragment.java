@@ -90,24 +90,24 @@ public class SettingsFragment extends Fragment {
 
 
                              AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                             alert.setTitle("Are You Sure?");
-                             alert.setMessage("You will upload your all contacts to application. Are you sure?");
-                             alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                             alert.setTitle(R.string.sure);
+                             alert.setMessage(R.string.uploadContacts);
+                             alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
 
                                      bringContacts();
 
-                                     Toast toast = Toast.makeText(getActivity(), "Your contacts are uploaded.", Toast.LENGTH_LONG);
+                                     Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
                                      toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
                                      toast.show();
 
                                  }
                              });
-                             alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                             alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
-                                     Toast toast = Toast.makeText(getActivity(), "Your contacts are not uploaded.", Toast.LENGTH_LONG);
+                                     Toast toast = Toast.makeText(getActivity(), R.string.contactsAreNot, Toast.LENGTH_LONG);
                                      toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
                                      toast.show();
                                  }
@@ -115,8 +115,8 @@ public class SettingsFragment extends Fragment {
                              alert.create().show();
                          }
                          else {
-                                 Snackbar.make(view, "Permission Required", Snackbar.LENGTH_INDEFINITE)
-                                         .setAction("Give Permission", new View.OnClickListener() {
+                                 Snackbar.make(view, R.string.required, Snackbar.LENGTH_INDEFINITE)
+                                         .setAction(R.string.givePermiss, new View.OnClickListener() {
                                              @Override
                                              public void onClick(View v) {
 
@@ -138,7 +138,7 @@ public class SettingsFragment extends Fragment {
                          if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
                              final ProgressDialog progressDialog = new ProgressDialog(getContext());
-                             progressDialog.setTitle("Uploading...");
+                             progressDialog.setTitle(getString(R.string.uploading));
                              progressDialog.setMessage("Contacts are uploading. Please wait.");
                              progressDialog.setCanceledOnTouchOutside(true);
                              progressDialog.show();
@@ -235,8 +235,8 @@ public class SettingsFragment extends Fragment {
 
                          }
                           else {
-                             Snackbar.make(view, "Permission Required",Snackbar.LENGTH_INDEFINITE)
-                                     .setAction("Give Permission", new View.OnClickListener() {
+                             Snackbar.make(view, R.string.permission,Snackbar.LENGTH_INDEFINITE)
+                                     .setAction(R.string.give, new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
 
@@ -258,22 +258,22 @@ public class SettingsFragment extends Fragment {
                     // }
                     else if (position == 2) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                        alert.setTitle("Are you sure?");
-                        alert.setMessage("Your all contacts will be deleted. Are you sure?");
-                        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        alert.setTitle(R.string.sureAre);
+                        alert.setMessage(R.string.contactWillBe);
+                        alert.setPositiveButton(R.string.yess, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 clearContacts();
-                                Toast toast = Toast.makeText(getActivity(), "Your all contacts are deleted.", Toast.LENGTH_LONG);
+                                Toast toast = Toast.makeText(getActivity(), R.string.yourAllContacts, Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
                                 toast.show();
 
                             }
                         });
-                        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        alert.setNegativeButton(R.string.noo, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast toast = Toast.makeText(getActivity(), "Deleting process is cancelled", Toast.LENGTH_LONG);
+                                Toast toast = Toast.makeText(getActivity(), R.string.deletingProcess, Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
                                 toast.show();
                             }
@@ -283,9 +283,9 @@ public class SettingsFragment extends Fragment {
                      }
                     else if (position == 3) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                        alert.setTitle("Are you sure?");
-                        alert.setMessage("Do you want to log out?");
-                        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        alert.setTitle(R.string.AreSure);
+                        alert.setMessage(R.string.LogOutt);
+                        alert.setPositiveButton(R.string.yesss, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mAuthorize.signOut();
@@ -294,10 +294,10 @@ public class SettingsFragment extends Fragment {
                                 startActivity(intent);
                             }
                         });
-                        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        alert.setNegativeButton(R.string.Nooo, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast toast = Toast.makeText(getActivity(), "Logging out process is cancelled", Toast.LENGTH_LONG);
+                                Toast toast = Toast.makeText(getActivity(), R.string.loggingProcess, Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
                                 toast.show();
                             }
@@ -394,7 +394,7 @@ public class SettingsFragment extends Fragment {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
-            Toast toast = Toast.makeText(getActivity(), "Please wait contacts are uploading...", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getActivity(), R.string.PleaseWait, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
             toast.show();
 
@@ -431,7 +431,7 @@ public class SettingsFragment extends Fragment {
             }
             phone.close();
         } else {
-            Toast toast = Toast.makeText(getActivity(), "Please Give Permission for importing contacts", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getActivity(), R.string.PleaseGivePermission, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
             toast.show();
         }

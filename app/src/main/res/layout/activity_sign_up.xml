@@ -19,14 +19,14 @@
         android:layout_height="wrap_content"
         android:textColor="#000"
         android:transitionName="logo_name"
-        android:text="Welcome"
+        android:text="@string/welcome"
         android:textSize="25sp"
         android:fontFamily="@font/bungee"
         android:layout_marginTop="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SignUp to start"
+        android:text="@string/signup_to_start"
         android:textStyle="bold"
         android:textSize="18sp"/>
 
@@ -45,7 +45,7 @@
             app:counterMaxLength="40"
             app:counterEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Full Name">
+            android:hint="@string/full_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_marginBottom="8dp"
             android:transitionName="logo_username"
-            android:hint="E-mail Address">
+            android:hint="@string/e_mail_address">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
             app:counterEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:transitionName="logo_password"
-            android:hint="Password">
+            android:hint="@string/password">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -96,7 +96,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SIGN UP"
+        android:text="@string/sign_up"
         android:transitionName="logo_login"
         android:onClick="Sign"
         android:id="@+id/signupButton"
@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:onClick="haveAccount"
         android:id="@+id/haveAccount"
-        android:text="Already have an account? LOGIN "
+        android:text="@string/already_have_an_account_login"
         android:transitionName="logo_newuser"
         android:background="#00000000"/>
 

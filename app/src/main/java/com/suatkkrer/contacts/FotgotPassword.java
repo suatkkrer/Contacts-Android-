@@ -39,12 +39,12 @@ public class FotgotPassword extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (TextUtils.isEmpty(forgotMail.getEditText().getText().toString())){
-                    Toast.makeText(FotgotPassword.this, "Email area can not be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FotgotPassword.this, R.string.emailAreaCannot, Toast.LENGTH_SHORT).show();
                 }
                 if (task.isSuccessful()){
-                    Toast.makeText(FotgotPassword.this, "Password is sent to your email", Toast.LENGTH_LONG).show();
+                    Toast.makeText(FotgotPassword.this, R.string.passwordIsSent, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(FotgotPassword.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FotgotPassword.this, R.string.somethingWentWrong, Toast.LENGTH_SHORT).show();
                 }
 
             }

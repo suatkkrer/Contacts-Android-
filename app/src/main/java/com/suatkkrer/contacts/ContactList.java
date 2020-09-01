@@ -177,7 +177,7 @@ public class  ContactList extends AppCompatActivity {
             }
             phone.close();
         } else {
-            Toast.makeText(this, "Please Give Permission for importing contacts", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.givePermission, Toast.LENGTH_SHORT).show();
         }
     }
 

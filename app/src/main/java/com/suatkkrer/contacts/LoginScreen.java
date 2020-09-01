@@ -104,21 +104,21 @@ public class LoginScreen extends AppCompatActivity {
         if(TextUtils.isEmpty(email))
 
         {
-            Toast.makeText(LoginScreen.this, "Email can not be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginScreen.this, R.string.emailCannotBeEmpty, Toast.LENGTH_SHORT).show();
         }
 
         if(TextUtils.isEmpty(passworda))
 
         {
-            Toast.makeText(LoginScreen.this, "Password can not be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginScreen.this, R.string.passwordCannotBeEmpty, Toast.LENGTH_SHORT).show();
 
         }
         else
         {
 
             //Progress
-            loginDialog.setTitle("Logging your account");
-            loginDialog.setMessage("Please Wait...");
+            loginDialog.setTitle(getString(R.string.logging));
+            loginDialog.setMessage(getString(R.string.pleaseWait));
             loginDialog.setCanceledOnTouchOutside(true);
             loginDialog.show();
 
@@ -132,14 +132,14 @@ public class LoginScreen extends AppCompatActivity {
                                 mainPage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(mainPage);
                                 finish();
-                                Toast.makeText(LoginScreen.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginScreen.this, R.string.loginSuccessful, Toast.LENGTH_SHORT).show();
                                 loginDialog.dismiss();
 
                             }
                             else
                             {
                                 String message = task.getException().toString();
-                                Toast.makeText(LoginScreen.this, "Please Check Your Password", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginScreen.this, R.string.pleaseCheckPassword, Toast.LENGTH_SHORT).show();
                                 loginDialog.dismiss();
                             }
 

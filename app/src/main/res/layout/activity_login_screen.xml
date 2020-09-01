@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/bungee"
-        android:text="Welcome Back"
+        android:text="@string/welcome_back"
         android:textColor="#000"
         android:textSize="25sp"
         android:transitionName="logo_name" />
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/antic"
-        android:text="Sign In to continue"
+        android:text="@string/sign_in_to_continue"
         android:transitionName="logo_desc"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -46,7 +46,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:hint="@string/username"
             android:id="@+id/username"
             android:transitionName="logo_username"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
-            android:hint="Password"
+            android:hint="@string/password"
             android:id="@+id/password"
             android:transitionName="logo_password"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -81,7 +81,7 @@
             android:background="#00000000"
             android:elevation="0dp"
             android:onClick="forgetPassword"
-            android:text="Forget Password"
+            android:text="@string/forget_password"
             android:transitionName="logo_forget_password" />
 
         <Button
@@ -91,7 +91,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="#000"
-            android:text="LogIn"
+            android:text="@string/login"
             android:onClick="login"
             android:textColor="#fff"
             android:transitionName="logo_login" />
@@ -105,7 +105,7 @@
             android:elevation="0dp"
             android:fontFamily="@font/antic"
             android:onClick="SignUp"
-            android:text="New User? SIGN UP"
+            android:text="@string/new_user_sign_up"
             android:textColor="#000"
             android:textStyle="bold"
             android:transitionName="logo_newuser" />

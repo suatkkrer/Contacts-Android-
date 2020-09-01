@@ -20,13 +20,13 @@
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:textStyle="bold"
-            android:text="Contact Name"
+            android:text="@string/contact_name"
             android:id="@+id/name_contact"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phone Number Here"
+            android:text="@string/phone_number_here"
             android:textColor="#ffffff"
             android:id="@+id/phone_contact"/>
     </LinearLayout>

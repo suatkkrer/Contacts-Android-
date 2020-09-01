@@ -32,7 +32,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Contact Name"
+            android:hint="@string/contact_name"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textStyle="bold"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:textSize="24sp"
-            android:hint="Phone Number"
+            android:hint="@string/phone_number"
             android:textColorHint="@android:color/white"
             android:textColor="@android:color/white"
             android:layout_marginTop="5dp"
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:text="Save Contact"
+            android:text="@string/save_contact"
             android:layout_marginTop="10dp"/>
         <Button
             android:id="@+id/dialog_btn_message"
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:text="Delete contact"/>
+            android:text="@string/delete_contact"/>
 
     </LinearLayout>
 

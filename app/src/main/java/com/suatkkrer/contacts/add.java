@@ -49,7 +49,7 @@ public class add extends AppCompatActivity {
     public void addContact(View view) {
 
         if (TextUtils.isEmpty(contactAdd.getEditText().getText().toString()) || TextUtils.isEmpty(numberAdd.getEditText().getText().toString())){
-            Toast.makeText(this, "Name field or number field can not be empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.nameOrField, Toast.LENGTH_LONG).show();
         } else {
 
 
@@ -60,7 +60,7 @@ public class add extends AppCompatActivity {
 //            contactNumb.put("id",id);
             reference.child(validUser).child("contacts").child(id).setValue(contactNumb);
 
-            Toast toast = Toast.makeText(getApplicationContext(), "You have added your contact.", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.addedContact, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
             toast.show();
             Intent intent = new Intent(add.this,ContactList.class);

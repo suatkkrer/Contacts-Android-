@@ -22,7 +22,7 @@
             android:layout_marginTop="120dp"
             android:textColorHint="@android:color/white"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Contact Name">
+            android:hint="@string/contact_name">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:textSize="24sp"
             android:layout_marginTop="10dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Phone Number">
+            android:hint="@string/phone_number">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             android:drawablePadding="20dp"
             android:drawableLeft="@drawable/addd"
             android:background="@android:color/white"
-            android:text="Add Contact"
+            android:text="@string/add_contact"
             android:textSize="22sp"
             android:layout_gravity="start"/>
 
@@ -75,7 +75,7 @@
             android:drawablePadding="20dp"
             android:drawableLeft="@drawable/cancel"
             android:background="@android:color/white"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textSize="22sp"
             android:layout_gravity="start"/>
 

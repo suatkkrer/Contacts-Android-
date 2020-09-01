@@ -4,18 +4,18 @@
     <item
         android:id="@+id/contactsNav"
         android:icon="@drawable/personn"
-        android:title="Contacts"/>
+        android:title="@string/contacts"/>
 
 
     <item
         android:id="@+id/duplicateNav"
         android:icon="@drawable/contactphone"
-        android:title="Duplicated"/>
+        android:title="@string/duplicated"/>
 
 
     <item
         android:id="@+id/settings"
         android:icon="@drawable/settings"
-        android:title="Settings"/>
+        android:title="@string/settings"/>
 
 </menu>

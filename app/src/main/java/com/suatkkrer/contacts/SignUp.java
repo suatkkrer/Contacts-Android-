@@ -77,18 +77,18 @@ public class SignUp extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email))
         {
-            Toast.makeText(SignUp.this, "Email can not be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUp.this, R.string.cannotBeEmpty, Toast.LENGTH_SHORT).show();
         }
 
         if (TextUtils.isEmpty(password))
         {
-            Toast.makeText(SignUp.this, "Password can not be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUp.this, R.string.cannotBeEmppty, Toast.LENGTH_SHORT).show();
         }
 
         else
         {
-            progressDialog.setTitle("New Account is Creating");
-            progressDialog.setMessage("Please Wait");
+            progressDialog.setTitle(getString(R.string.newAccountIs));
+            progressDialog.setMessage(getString(R.string.PleaseWaitt));
             progressDialog.setCanceledOnTouchOutside(true);
             progressDialog.show();
 
@@ -109,7 +109,7 @@ public class SignUp extends AppCompatActivity {
                                 startActivity(mainPage);
                                 finish();
 
-                                Toast.makeText(SignUp.this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUp.this, R.string.AccountCreatedSucces, Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }
                             else

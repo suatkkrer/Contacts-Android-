@@ -58,7 +58,7 @@ public class EditActivity extends AppCompatActivity {
         
         reference.removeValue();
 
-        Toast toast = Toast.makeText(getApplicationContext(), "Contact is deleted.", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), R.string.contactDeleted, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
         toast.show();
 
@@ -69,12 +69,12 @@ public class EditActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(name_id.getEditText().getText().toString()) || TextUtils.isEmpty(phone_id.getEditText().getText().toString()))
         {
-            Toast.makeText(this, "Please enter name and phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enterNamePhoneNumber, Toast.LENGTH_SHORT).show();
         } else
         {
             update(id,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
             Intent intent = new Intent(getApplicationContext(),ContactList.class);
-            Toast.makeText(this, "Contact updated successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
             startActivity(intent);
         }
 
