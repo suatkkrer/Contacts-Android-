@@ -152,9 +152,9 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
     public void onNoteClick(int position) {
 
         Intent intent = new Intent(thisContext,EditActivity.class);
-        intent.putExtra("name",userNameDuplicated2.get(position));
-        intent.putExtra("phone",userPhoneDuplicated2.get(position));
-        intent.putExtra("id",userIdDuplicated2.get(position));
+        intent.putExtra("nameDuplicated",userNameDuplicated2.get(position));
+        intent.putExtra("phoneDuplicated",userPhoneDuplicated2.get(position));
+        intent.putExtra("idDuplicated",userIdDuplicated2.get(position));
         startActivity(intent);
     }
 }

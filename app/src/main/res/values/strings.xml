@@ -77,4 +77,6 @@
     <string name="DeleteContactFromApp">Delete My All Contacts From App</string>
     <string name="logOut">Log out</string>
     <string name="ContactAreUploading">Contacts are uploading. Please wait.</string>
+    <string name="duplicatedDelete">Your all duplicated contacts will be deleted. Are you sure?</string>
+    <string name="duplicatedDeleted">Your duplicated contacts are deleted</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.suatkkrer.contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -26,7 +28,8 @@ public class EditActivity extends AppCompatActivity {
     TextInputLayout name_id,phone_id;
     private FirebaseAuth mAuthorize;
     String validUser;
-    String id;
+    String id, name,phone,name2,phone2,id2;
+    DuplicateFragment duplicateFragment;
 
 
     @Override
@@ -41,29 +44,49 @@ public class EditActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String phone = intent.getStringExtra("phone");
+        name = intent.getStringExtra("name");
+        phone = intent.getStringExtra("phone");
         id = intent.getStringExtra("id");
-
-
         name_id.getEditText().setText(name);
         phone_id.getEditText().setText(phone);
+
+        if (name == null || phone == null || id == null){
+            Intent intent1 = getIntent();
+            name2 = intent1.getStringExtra("nameDuplicated");
+            phone2 = intent1.getStringExtra("phoneDuplicated");
+            id2 = intent1.getStringExtra("idDuplicated");
+            name_id.getEditText().setText(name2);
+            phone_id.getEditText().setText(phone2);
+        }
+
+
+
 
     }
 
     public void deleteContact(View view) {
+        Intent intent;
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
-                .child(validUser).child("contacts").child(id);
-        Intent intent = new Intent(getApplicationContext(),ContactList.class);
 
-        reference.removeValue();
 
-        Toast toast = Toast.makeText(getApplicationContext(), R.string.contactDeleted, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-        toast.show();
+        if (name != null) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
+                    .child(validUser).child("contacts").child(id);
+            reference.removeValue();
+            intent = new Intent(getApplicationContext(), ContactList.class);
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.contactDeleted, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+            toast.show();
+            startActivity(intent);
+        } else {
+            duplicateFragment = new DuplicateFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.editLinear,duplicateFragment).commit();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
+                    .child(validUser).child("contacts").child(id2);
+            reference.removeValue();
+        }
 
-        startActivity(intent);
     }
 
     public void updateData(View view) {
@@ -73,10 +96,18 @@ public class EditActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.enterNamePhoneNumber, Toast.LENGTH_SHORT).show();
         } else
         {
-            update(id,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
-            Intent intent = new Intent(getApplicationContext(),ContactList.class);
-            Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
-            startActivity(intent);
+            if (name != null){
+                update(id,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
+                Intent intent = new Intent(getApplicationContext(),ContactList.class);
+                Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            } else {
+                update(id2,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
+                Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.editLinear,duplicateFragment).commit();
+            }
+
         }
 
     }

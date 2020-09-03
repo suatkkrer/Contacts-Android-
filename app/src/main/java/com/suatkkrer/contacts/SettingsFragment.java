@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,12 +110,18 @@ public class SettingsFragment extends Fragment {
 
                                      bringContacts();
 
-
-                                    progressDialog1.dismiss();
-
                                      Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
                                      toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
                                      toast.show();
+
+                                     ContactFragment contactFragment = new ContactFragment();
+                                     FragmentManager manager = getFragmentManager();
+                                     manager.beginTransaction()
+                                             .replace(R.id.fragment_container,contactFragment,contactFragment.getTag())
+                                             .commit();
+
+                                     progressDialog1.dismiss();
+
 
                                  }
                              });
@@ -269,7 +276,28 @@ public class SettingsFragment extends Fragment {
                                      }).show();
                          }
                      }  else if (position ==2){
-                         getDataFirebase();
+                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                         alert.setTitle(R.string.sureAre);
+                         alert.setMessage(R.string.duplicatedDelete);
+                         alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                             @Override
+                             public void onClick(DialogInterface dialog, int which) {
+                                 getDataFirebase();
+                                 Toast toast = Toast.makeText(getActivity(), R.string.duplicatedDeleted, Toast.LENGTH_LONG);
+                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                 toast.show();
+                             }
+                         });
+                         alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                             @Override
+                             public void onClick(DialogInterface dialog, int which) {
+                                 Toast toast = Toast.makeText(getActivity(), R.string.deletingProcess, Toast.LENGTH_LONG);
+                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                 toast.show();
+                             }
+                         });
+                         alert.create().show();
+
 
                      }
                     else if (position == 3) {

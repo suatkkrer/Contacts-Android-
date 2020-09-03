@@ -50,10 +50,15 @@ public class ContactFragment extends Fragment implements RecylerViewAdapter.OnNo
         v = inflater.inflate(R.layout.fragment_contact,container,false);
         recyclerView = v.findViewById(R.id.contact_recyclerview);
         contactText = v.findViewById(R.id.contactFragmentText);
-        contactText.setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recylerViewAdapter = new RecylerViewAdapter(userName,userPhone,this);
         recyclerView.setAdapter(recylerViewAdapter);
+
+        if (recylerViewAdapter.getItemCount() == 0){
+            contactText.setVisibility(View.VISIBLE);
+        } else {
+            contactText.setVisibility(View.INVISIBLE);
+        }
 
         return v;
     }

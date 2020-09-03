@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundfragment"
+    android:id="@+id/fragmentContact"
     android:orientation="vertical"
     tools:context=".ContactList">
 
@@ -23,7 +24,6 @@
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        app:itemTextColor="@android:color/black"
         app:menu="@menu/bottomnav"
         />
 
