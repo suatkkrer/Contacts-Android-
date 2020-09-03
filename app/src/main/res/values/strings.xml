@@ -70,4 +70,11 @@
     <string name="duplicated">Duplicated</string>
     <string name="settings">Settings</string>
     <string name="add_contact">Add Contact</string>
+    <string name="importt">You can add contacts manually or you can import your contacts from settings</string>
+    <string name="importToApp">Import My Phone Book Contacts to App</string>
+    <string name="exportToPhoneBook">Export My All Contacts to Phone Book</string>
+    <string name="deleteDuplicated">Delete All Duplicated Names</string>
+    <string name="DeleteContactFromApp">Delete My All Contacts From App</string>
+    <string name="logOut">Log out</string>
+    <string name="ContactAreUploading">Contacts are uploading. Please wait.</string>
 </resources>

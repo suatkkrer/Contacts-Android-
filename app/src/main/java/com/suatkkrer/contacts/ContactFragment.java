@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ public class ContactFragment extends Fragment implements RecylerViewAdapter.OnNo
     ArrayList<String> userName;
     ArrayList<String> userPhone;
     ArrayList<String> userID;
+    TextView contactText;
     //    ArrayList<String> userID;
     HashMap<String, Object> contactNumb = new HashMap<>();
     RecyclerView recyclerView;
@@ -47,9 +49,12 @@ public class ContactFragment extends Fragment implements RecylerViewAdapter.OnNo
         thisContext = container.getContext();
         v = inflater.inflate(R.layout.fragment_contact,container,false);
         recyclerView = v.findViewById(R.id.contact_recyclerview);
+        contactText = v.findViewById(R.id.contactFragmentText);
+        contactText.setVisibility(View.INVISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recylerViewAdapter = new RecylerViewAdapter(userName,userPhone,this);
         recyclerView.setAdapter(recylerViewAdapter);
+
         return v;
     }
 
@@ -70,7 +75,11 @@ public class ContactFragment extends Fragment implements RecylerViewAdapter.OnNo
         getDataFirebase();
 
 
+
+
+
     }
+
 
     public void getDataFirebase(){
 

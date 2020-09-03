@@ -60,6 +60,9 @@ public class SettingsFragment extends Fragment {
     ArrayList<String> userNameDuplicated2;
     ArrayList<String> userPhoneDuplicated2;
     ArrayList<String> userIdDuplicated2;
+    ProgressDialog progressDialog;
+    ProgressDialog progressDialog1;
+
 
 
     @Nullable
@@ -69,13 +72,12 @@ public class SettingsFragment extends Fragment {
         assert container != null;
         thisContext = container.getContext();
         listView = v.findViewById(R.id.settingsList);
-
-        ArrayList<String> settings = new ArrayList<>();
-        settings.add("Import My Phone Book Contacts to App");
-        settings.add("Export My All Contacts to Phone Book");
-        settings.add("Delete All Duplicated Names");
-        settings.add("Delete My All Contacts");
-        settings.add("Log out");
+        final ArrayList<String> settings = new ArrayList<>();
+        settings.add(getString(R.string.importToApp));
+        settings.add(getString(R.string.exportToPhoneBook));
+        settings.add(getString(R.string.deleteDuplicated));
+        settings.add(getString(R.string.DeleteContactFromApp));
+        settings.add(getString(R.string.logOut));
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(),R.layout.settingslayout,settings);
         listView.setAdapter(arrayAdapter);
@@ -97,7 +99,18 @@ public class SettingsFragment extends Fragment {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
 
+                                     progressDialog1 = new ProgressDialog(getActivity());
+
+
+                                     progressDialog1.setTitle(getString(R.string.uploading));
+                                     progressDialog1.setMessage(getString(R.string.ContactAreUploading));
+                                     progressDialog1.setCanceledOnTouchOutside(true);
+                                     progressDialog1.show();
+
                                      bringContacts();
+
+
+                                    progressDialog1.dismiss();
 
                                      Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
                                      toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
@@ -138,9 +151,11 @@ public class SettingsFragment extends Fragment {
 
                          if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
-                             final ProgressDialog progressDialog = new ProgressDialog(getContext());
+                             progressDialog = new ProgressDialog(getActivity());
+
+
                              progressDialog.setTitle(getString(R.string.uploading));
-                             progressDialog.setMessage("Contacts are uploading. Please wait.");
+                             progressDialog.setMessage(getString(R.string.ContactAreUploading));
                              progressDialog.setCanceledOnTouchOutside(true);
                              progressDialog.show();
 
@@ -325,6 +340,7 @@ public class SettingsFragment extends Fragment {
         userIdDuplicated2 = new ArrayList<>();
         userNameDuplicated2 = new ArrayList<>();
         userPhoneDuplicated2 = new ArrayList<>();
+
 
         mAuthorize = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();

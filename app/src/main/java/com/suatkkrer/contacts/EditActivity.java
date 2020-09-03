@@ -2,6 +2,7 @@ package com.suatkkrer.contacts;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +45,6 @@ public class EditActivity extends AppCompatActivity {
         String phone = intent.getStringExtra("phone");
         id = intent.getStringExtra("id");
 
-        System.out.println(id);
 
         name_id.getEditText().setText(name);
         phone_id.getEditText().setText(phone);
@@ -56,8 +57,6 @@ public class EditActivity extends AppCompatActivity {
                 .child(validUser).child("contacts").child(id);
         Intent intent = new Intent(getApplicationContext(),ContactList.class);
 
-
-        
         reference.removeValue();
 
         Toast toast = Toast.makeText(getApplicationContext(), R.string.contactDeleted, Toast.LENGTH_LONG);
@@ -91,5 +90,10 @@ public class EditActivity extends AppCompatActivity {
         databaseReference.setValue(contact);
 
         return true;
+    }
+
+    public void hidee(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
     }
 }
