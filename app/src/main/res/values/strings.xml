@@ -79,4 +79,5 @@
     <string name="ContactAreUploading">Contacts are uploading. Please wait.</string>
     <string name="duplicatedDelete">Your all duplicated contacts will be deleted. Are you sure?</string>
     <string name="duplicatedDeleted">Your duplicated contacts are deleted</string>
+    <string name="there_is_no_duplicated_contact">There is no duplicated contact</string>
 </resources>

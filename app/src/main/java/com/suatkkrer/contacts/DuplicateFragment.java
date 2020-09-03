@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,7 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
     ArrayList<String> userNameDuplicated2;
     ArrayList<String> userPhoneDuplicated2;
     ArrayList<String> userIdDuplicated2;
+    TextView duplicatedText;
     String validUser;
     View v;
     Context thisContext;
@@ -50,6 +52,10 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
         thisContext = container.getContext();
         v = inflater.inflate(R.layout.fragment_duplicate,container,false);
         recyclerView = v.findViewById(R.id.duplicate_recyclerview);
+        duplicatedText = v.findViewById(R.id.duplicatedFragmentText);
+
+        duplicatedText.setVisibility(View.INVISIBLE);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recylerViewAdapter = new RecylerViewAdapter(userNameDuplicated2,userPhoneDuplicated2,  this);
         recyclerView.setAdapter(recylerViewAdapter);
@@ -140,6 +146,11 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
 //                    }
 //                }
                 recylerViewAdapter.notifyDataSetChanged();
+                if (recylerViewAdapter.getItemCount() == 0){
+                    duplicatedText.setVisibility(View.VISIBLE);
+                } else {
+                    duplicatedText.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
