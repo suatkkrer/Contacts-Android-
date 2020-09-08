@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,18 +49,12 @@ public class  ContactList extends AppCompatActivity {
     DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
     String validUser;
-    RecylerViewAdapter recylerViewAdapter;
     ArrayList<String> userName;
     ArrayList<String> userPhone;
     ArrayList<String> userID;
-    //    ArrayList<String> userID;
-    HashMap<String, Object> contactNumb = new HashMap<>();
-    RecyclerView recyclerView;
     String id;
-    ListView listView;
     public static Context contextOfApplication;
     List<Contact> contacts = new ArrayList<>();
-    DataSnapshot snapshot;
 
     public static Context getContextOfApplication() {
         return contextOfApplication;
@@ -83,6 +78,8 @@ public class  ContactList extends AppCompatActivity {
         userPhone = new ArrayList<>();
         userID = new ArrayList<>();
 
+        
+
         mAuthorize = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         validUser = mAuthorize.getCurrentUser().getUid();
@@ -91,6 +88,7 @@ public class  ContactList extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemReselectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ContactFragment()).commit();
         contextOfApplication = getApplicationContext();
+
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setElevation(0);

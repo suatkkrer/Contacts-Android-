@@ -129,9 +129,9 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
                             userIdDuplicated2.add(userID.get(i));
                         }
                         if (userName.get(i).equals(userName.get(j))) {
-                            userNameDuplicated2.add(userName.get(j));
-                            userPhoneDuplicated2.add(userPhone.get(j));
-                            userIdDuplicated2.add(userID.get(j));
+                            userNameDuplicated2.add(userName.get(i));
+                            userPhoneDuplicated2.add(userPhone.get(i));
+                            userIdDuplicated2.add(userID.get(i));
                         }
                     }
                 }
@@ -163,9 +163,9 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
     public void onNoteClick(int position) {
 
         Intent intent = new Intent(thisContext,EditActivity.class);
-        intent.putExtra("nameDuplicated",userNameDuplicated2.get(position));
-        intent.putExtra("phoneDuplicated",userPhoneDuplicated2.get(position));
-        intent.putExtra("idDuplicated",userIdDuplicated2.get(position));
+        intent.putExtra("name",userNameDuplicated2.get(position));
+        intent.putExtra("phone",userPhoneDuplicated2.get(position));
+        intent.putExtra("id",userIdDuplicated2.get(position));
         startActivity(intent);
     }
 }

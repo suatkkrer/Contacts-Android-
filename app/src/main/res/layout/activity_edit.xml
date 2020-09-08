@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:onClick="hidee"
     android:background="@color/backgroundfragment"
+    android:id="@+id/editLinear2"
     android:gravity="center"
     tools:context=".EditActivity">
 

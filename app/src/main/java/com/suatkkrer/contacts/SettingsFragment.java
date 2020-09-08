@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -61,8 +62,13 @@ public class SettingsFragment extends Fragment {
     ArrayList<String> userNameDuplicated2;
     ArrayList<String> userPhoneDuplicated2;
     ArrayList<String> userIdDuplicated2;
+    ArrayList<String> bringName;
+    ArrayList<String> bringPhone;
+    ArrayList<String> bringId;
     ProgressDialog progressDialog;
     ProgressDialog progressDialog1;
+    ProgressDialog progressDialog2;
+
 
 
 
@@ -100,15 +106,8 @@ public class SettingsFragment extends Fragment {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
 
-                                     progressDialog1 = new ProgressDialog(getActivity());
 
-
-                                     progressDialog1.setTitle(getString(R.string.uploading));
-                                     progressDialog1.setMessage(getString(R.string.ContactAreUploading));
-                                     progressDialog1.setCanceledOnTouchOutside(true);
-                                     progressDialog1.show();
-
-                                     bringContacts();
+                                     bringContacts2();
 
                                      Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
                                      toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
@@ -120,7 +119,6 @@ public class SettingsFragment extends Fragment {
                                              .replace(R.id.fragment_container,contactFragment,contactFragment.getTag())
                                              .commit();
 
-                                     progressDialog1.dismiss();
 
 
                                  }
@@ -158,103 +156,7 @@ public class SettingsFragment extends Fragment {
 
                          if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
-                             progressDialog = new ProgressDialog(getActivity());
-
-
-                             progressDialog.setTitle(getString(R.string.uploading));
-                             progressDialog.setMessage(getString(R.string.ContactAreUploading));
-                             progressDialog.setCanceledOnTouchOutside(true);
-                             progressDialog.show();
-
-                            Runnable progressRunnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressDialog.cancel();
-                                }
-                            };
-                             Handler handler = new Handler();
-                             handler.postDelayed(progressRunnable,3000);
-
-
-                             DatabaseReference reference = firebaseDatabase.getReference("Users");
-                             reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
-                                 @Override
-                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                                     userName.clear();
-                                     userPhone.clear();
-                                     userID.clear();
-                                     for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                                         Contact contact = snapshot1.getValue(Contact.class);
-
-
-
-                                         if (contact.getName() != null && contact.getPhone() != null) {
-
-
-
-
-                                             String txt = contact.getName();
-                                             String txtphone = contact.getPhone();
-                                             String userid = contact.getId();
-                                             userName.add(txt);
-                                             userPhone.add(txtphone);
-                                             userID.add(userid);
-
-                                             ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-
-                                             ops.add(ContentProviderOperation.newInsert(
-                                                     ContactsContract.RawContacts.CONTENT_URI)
-                                                     .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-                                                     .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-                                                     .build());
-
-
-                                             if (txt != null) {
-                                                 ops.add(ContentProviderOperation.newInsert(
-                                                         ContactsContract.Data.CONTENT_URI)
-                                                         .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                                                         .withValue(ContactsContract.Data.MIMETYPE,
-                                                                 ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                                                         .withValue(
-                                                                 ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
-                                                                 txt).build());
-
-                                             }
-
-                                             if (txtphone != null) {
-                                                 ops.add(ContentProviderOperation.
-                                                         newInsert(ContactsContract.Data.CONTENT_URI)
-                                                         .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                                                         .withValue(ContactsContract.Data.MIMETYPE,
-                                                                 ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                                                         .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, txtphone)
-                                                         .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
-                                                                 ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
-                                                         .build());
-
-                                             }
-                                             try {
-                                                 Context appContext = ContactList.getContextOfApplication();
-                                                 appContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                                                 progressDialog.dismiss();
-//                                                 Toast toast = Toast.makeText(getActivity(), "Contacts uploaded to your phone book.", Toast.LENGTH_LONG);
-//                                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-//                                                 toast.show();
-                                             } catch (Exception e) {
-                                                 e.printStackTrace();
-                                                 progressDialog.dismiss();
-                                             }
-                                         }
-                                     }
-                                 }
-
-                                 @Override
-                                 public void onCancelled(@NonNull DatabaseError error) {
-
-                                 }
-                             });
+                            importContacts();
 
                          }
                           else {
@@ -368,6 +270,9 @@ public class SettingsFragment extends Fragment {
         userIdDuplicated2 = new ArrayList<>();
         userNameDuplicated2 = new ArrayList<>();
         userPhoneDuplicated2 = new ArrayList<>();
+        bringName = new ArrayList<>();
+        bringPhone = new ArrayList<>();
+        bringId = new ArrayList<>();
 
 
         mAuthorize = FirebaseAuth.getInstance();
@@ -383,9 +288,6 @@ public class SettingsFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.READ_CONTACTS},1);
             ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.WRITE_CONTACTS},7);
         }
-
-
-
     }
 
     private void getDataFirebase() {
@@ -462,12 +364,15 @@ public class SettingsFragment extends Fragment {
             Cursor phone = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     null, null, null, ContactsContract.Contacts.DISPLAY_NAME);
 
-            ArrayList<String> contactList = new ArrayList<>();
-            ArrayList<String> contactList1 = new ArrayList<>();
             String column = ContactsContract.Contacts.DISPLAY_NAME;
             String col = ContactsContract.CommonDataKinds.Phone.NUMBER;
 
-            assert phone != null;
+            progressDialog2 = new ProgressDialog(getActivity());
+
+            progressDialog2.setTitle(getString(R.string.uploading));
+            progressDialog2.setMessage(getString(R.string.ContactAreUploading));
+            progressDialog2.setCanceledOnTouchOutside(true);
+            progressDialog2.show();
 
             while (phone.moveToNext()) {
 
@@ -482,10 +387,9 @@ public class SettingsFragment extends Fragment {
                     Contact contact = new Contact(id, name, number);
 
                     databaseReference.setValue(contact);
-
-
                 }
             }
+            progressDialog2.dismiss();
             phone.close();
         } else {
             Toast toast = Toast.makeText(getActivity(), R.string.PleaseGivePermission, Toast.LENGTH_LONG);
@@ -493,9 +397,250 @@ public class SettingsFragment extends Fragment {
             toast.show();
         }
     }
+
+    public void bringContacts2(){
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+            Toast toast = Toast.makeText(getActivity(), R.string.PleaseWait, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+            toast.show();
+
+            String name = null;
+            String number = null;
+
+            Cursor phone = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null, null, null, ContactsContract.Contacts.DISPLAY_NAME);
+
+            String column = ContactsContract.Contacts.DISPLAY_NAME;
+
+            while (phone.moveToNext()) {
+
+                name = phone.getString(phone.getColumnIndex(column));
+                number = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                bringName.add(name);
+                bringPhone.add(number);
+
+            }
+            System.out.println(bringName);
+            System.out.println(bringPhone);
+            phone.close();
+
+            for (int i = 0; i < bringName.size() ; i++) {
+
+     //           if (name != null && number != null) {
+                    id = reference.push().getKey();
+
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+                            .child(validUser).child("contacts").child(id);
+                    Contact contact = new Contact(id, bringName.get(i), bringPhone.get(i));
+
+                    databaseReference.setValue(contact);
+         //       }
+
+            }
+
+        } else {
+            Toast toast = Toast.makeText(getActivity(), R.string.PleaseGivePermission, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+            toast.show();
+        }
+    }
+
+
     public void clearContacts(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
                 .child(validUser).child("contacts");
         databaseReference.removeValue();
     }
-}
+    public void importContacts(){
+
+        progressDialog = new ProgressDialog(getActivity());
+
+
+        progressDialog.setTitle(getString(R.string.uploading));
+        progressDialog.setMessage(getString(R.string.ContactAreUploading));
+        progressDialog.setCanceledOnTouchOutside(true);
+        progressDialog.show();
+
+
+
+        DatabaseReference reference = firebaseDatabase.getReference("Users");
+        reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                userName.clear();
+                userPhone.clear();
+                userID.clear();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    Contact contact = snapshot1.getValue(Contact.class);
+
+
+
+                    if (contact.getName() != null && contact.getPhone() != null) {
+
+
+
+
+                        String txt = contact.getName();
+                        String txtphone = contact.getPhone();
+                        String userid = contact.getId();
+                        userName.add(txt);
+                        userPhone.add(txtphone);
+                        userID.add(userid);
+
+                        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+                        ops.add(ContentProviderOperation.newInsert(
+                                ContactsContract.RawContacts.CONTENT_URI)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                                .build());
+
+
+                        if (txt != null) {
+                            ops.add(ContentProviderOperation.newInsert(
+                                    ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                                    .withValue(
+                                            ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                            txt).build());
+
+                        }
+
+                        if (txtphone != null) {
+                            ops.add(ContentProviderOperation.
+                                    newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValue(ContactsContract.Data.MIMETYPE,
+                                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, txtphone)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                    .build());
+
+                        }
+                        try {
+                            Context appContext = ContactList.getContextOfApplication();
+                            appContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                            progressDialog.dismiss();
+//                                                 Toast toast = Toast.makeText(getActivity(), "Contacts uploaded to your phone book.", Toast.LENGTH_LONG);
+//                                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+//                                                 toast.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void importContacts2(){
+
+        progressDialog = new ProgressDialog(getActivity());
+
+
+        progressDialog.setTitle(getString(R.string.uploading));
+        progressDialog.setMessage(getString(R.string.ContactAreUploading));
+        progressDialog.setCanceledOnTouchOutside(true);
+        progressDialog.show();
+
+
+        DatabaseReference reference = firebaseDatabase.getReference("Users");
+        reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                userName.clear();
+                userPhone.clear();
+                userID.clear();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    Contact contact = snapshot1.getValue(Contact.class);
+
+
+                    if (contact.getName() != null && contact.getPhone() != null) {
+
+
+                        String txt = contact.getName();
+                        String txtphone = contact.getPhone();
+                        String userid = contact.getId();
+                        userName.add(txt);
+                        userPhone.add(txtphone);
+                        userID.add(userid);
+                    }
+                }
+
+
+
+                        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+                        ops.add(ContentProviderOperation.newInsert(
+                                ContactsContract.RawContacts.CONTENT_URI)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                                .build());
+
+
+                        if (userName.size() != 0) {
+                            for (int i = 0; i < userName.size() ; i++) {
+
+                                ops.add(ContentProviderOperation.newInsert(
+                                        ContactsContract.Data.CONTENT_URI)
+                                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                        .withValue(ContactsContract.Data.MIMETYPE,
+                                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                                        .withValue(
+                                                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                                userName.get(i)).build());
+                            }
+                        }
+
+                        if (userPhone.size() != 0) {
+                            for (int i = 0; i < userPhone.size() ; i++) {
+
+                                ops.add(ContentProviderOperation.
+                                        newInsert(ContactsContract.Data.CONTENT_URI)
+                                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                        .withValue(ContactsContract.Data.MIMETYPE,
+                                                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                        .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, userPhone.get(i))
+                                        .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                                ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                                        .build());
+                            }
+                        }
+                        try {
+                            Context appContext = ContactList.getContextOfApplication();
+                            appContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                            progressDialog.dismiss();
+//                                                 Toast toast = Toast.makeText(getActivity(), "Contacts uploaded to your phone book.", Toast.LENGTH_LONG);
+//                                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+//                                                 toast.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            progressDialog.dismiss();
+                        }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+    }
+

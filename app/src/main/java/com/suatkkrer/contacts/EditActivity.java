@@ -29,7 +29,6 @@ public class EditActivity extends AppCompatActivity {
     private FirebaseAuth mAuthorize;
     String validUser;
     String id, name,phone,name2,phone2,id2;
-    DuplicateFragment duplicateFragment;
 
 
     @Override
@@ -50,14 +49,14 @@ public class EditActivity extends AppCompatActivity {
         name_id.getEditText().setText(name);
         phone_id.getEditText().setText(phone);
 
-        if (name == null || phone == null || id == null){
-            Intent intent1 = getIntent();
-            name2 = intent1.getStringExtra("nameDuplicated");
-            phone2 = intent1.getStringExtra("phoneDuplicated");
-            id2 = intent1.getStringExtra("idDuplicated");
-            name_id.getEditText().setText(name2);
-            phone_id.getEditText().setText(phone2);
-        }
+//        if (name == null || phone == null || id == null){
+//            Intent intent1 = getIntent();
+//            name2 = intent1.getStringExtra("nameDuplicated");
+//            phone2 = intent1.getStringExtra("phoneDuplicated");
+//            id2 = intent1.getStringExtra("idDuplicated");
+//            name_id.getEditText().setText(name2);
+//            phone_id.getEditText().setText(phone2);
+//        }
 
 
 
@@ -69,7 +68,7 @@ public class EditActivity extends AppCompatActivity {
 
 
 
-        if (name != null) {
+    //    if (name != null) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
                     .child(validUser).child("contacts").child(id);
             reference.removeValue();
@@ -78,14 +77,13 @@ public class EditActivity extends AppCompatActivity {
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
             toast.show();
             startActivity(intent);
-        } else {
-            duplicateFragment = new DuplicateFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.editLinear,duplicateFragment).commit();
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
-                    .child(validUser).child("contacts").child(id2);
-            reference.removeValue();
-        }
+//        } else {
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_container,new DuplicateFragment()).addToBackStack(ContactList.class.getSimpleName()).commit();
+//            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users")
+//                    .child(validUser).child("contacts").child(id2);
+//            reference.removeValue();
+//        }
 
     }
 
@@ -96,17 +94,17 @@ public class EditActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.enterNamePhoneNumber, Toast.LENGTH_SHORT).show();
         } else
         {
-            if (name != null){
+        //    if (name != null){
                 update(id,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
                 Intent intent = new Intent(getApplicationContext(),ContactList.class);
                 Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
                 startActivity(intent);
-            } else {
-                update(id2,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
-                Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.editLinear,duplicateFragment).commit();
-            }
+//            } else {
+//                update(id2,name_id.getEditText().getText().toString(),phone_id.getEditText().getText().toString());
+//                Toast.makeText(this, R.string.contactUpdated, Toast.LENGTH_SHORT).show();
+//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(R.id.fragment_container,new DuplicateFragment()).addToBackStack(ContactList.class.getSimpleName()).commit();
+//            }
 
         }
 

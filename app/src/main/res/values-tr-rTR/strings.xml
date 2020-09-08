@@ -71,4 +71,14 @@
     <string name="contacts">Kişiler</string>
     <string name="duplicated">Tekrarlanan</string>
     <string name="settings">Ayarlar</string>
+    <string name="logOut">Çıkış Yap</string>
+    <string name="ContactAreUploading">Kişiler yükleniyor. Lütfen bekleyin.</string>
+    <string name="DeleteContactFromApp">Uygulamada ki bütün kişileri sil.</string>
+    <string name="deleteDuplicated">Tüm tekrar eden kişileri sil.</string>
+    <string name="exportToPhoneBook">Uygulamada ki kişileri rehbere aktar</string>
+    <string name="importToApp">Rehberde ki kişileri uygulamaya aktar</string>
+    <string name="importt">Kişileri uygulamadan yükleyebilirsiniz ya da ayarlar kısmından rehberinizi uygulamaya aktarabilirsiniz.</string>
+    <string name="duplicatedDelete">Tüm tekrar eden kişiler silinecek. Emin misiniz?</string>
+    <string name="duplicatedDeleted">Tüm tekrar eden kişiler silindi.</string>
+    <string name="there_is_no_duplicated_contact">Rehberinizde tekrar eden kişi yok.</string>
 </resources>
