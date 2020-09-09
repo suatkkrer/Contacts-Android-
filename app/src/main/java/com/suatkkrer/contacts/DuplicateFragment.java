@@ -106,18 +106,6 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
                     }
                 }
 
-//                for (int i = 0; i < userName.size() ; i++) {
-//                    if (!userNameDuplicated.contains(userName.get(i))){
-//                        userNameDuplicated.add((userName.get(i)));
-//                        userPhoneDuplicated.add(userPhone.get(i));
-//                        userIdDuplicated.add(userID.get(i));
-//                    } else {
-//                        userNameDuplicated2.add(userName.get(i));
-//                        userPhoneDuplicated2.add(userPhone.get(i));
-//                        userIdDuplicated2.add(userID.get(i));
-//                    }
-//                }
-
                 for (int i = 0; i < userName.size(); i++) {
                     if (userNameDuplicated2.contains(userName.get(i))){
                         break;
@@ -129,22 +117,12 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
                             userIdDuplicated2.add(userID.get(i));
                         }
                         if (userName.get(i).equals(userName.get(j))) {
-                            userNameDuplicated2.add(userName.get(i));
-                            userPhoneDuplicated2.add(userPhone.get(i));
-                            userIdDuplicated2.add(userID.get(i));
+                            userNameDuplicated2.add(userName.get(j));
+                            userPhoneDuplicated2.add(userPhone.get(j));
+                            userIdDuplicated2.add(userID.get(j));
                         }
                     }
                 }
-
-//                for (int i = 0; i < userPhone.size() ; i++) {
-//                    if (!userPhoneDuplicated.contains(userPhone.get(i))){
-//                        userPhoneDuplicated.add(userPhone.get(i));
-//                        userNameDuplicated.add(userName.get(i));
-//                    } else {
-//                        userPhoneDuplicated2.add(userPhone.get(i));
-//                        userNameDuplicated2.add(userName.get(i));
-//                    }
-//                }
                 recylerViewAdapter.notifyDataSetChanged();
                 if (recylerViewAdapter.getItemCount() == 0){
                     duplicatedText.setVisibility(View.VISIBLE);

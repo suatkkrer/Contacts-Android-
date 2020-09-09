@@ -65,9 +65,7 @@ public class SettingsFragment extends Fragment {
     ArrayList<String> bringName;
     ArrayList<String> bringPhone;
     ArrayList<String> bringId;
-    ProgressDialog progressDialog;
-    ProgressDialog progressDialog1;
-    ProgressDialog progressDialog2;
+
 
 
 
@@ -106,8 +104,16 @@ public class SettingsFragment extends Fragment {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
 
+                                     final ProgressDialog progressDialog2 = new ProgressDialog(getActivity());
 
-                                     bringContacts2();
+                                     progressDialog2.setTitle(getString(R.string.uploading));
+                                     progressDialog2.setMessage(getString(R.string.ContactAreUploading));
+                                     progressDialog2.setCanceledOnTouchOutside(true);
+                                     progressDialog2.show();
+
+                                     bringContacts();
+
+                                     progressDialog2.dismiss();
 
                                      Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
                                      toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
@@ -156,7 +162,29 @@ public class SettingsFragment extends Fragment {
 
                          if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
-                            importContacts();
+                             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                             alert.setTitle(R.string.sure);
+                             alert.setMessage(R.string.exportContacts);
+                             alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                         @Override
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             importContacts();
+                                             Toast toast = Toast.makeText(getActivity(), "Contacts are uploaded to your phone book.", Toast.LENGTH_LONG);
+                                             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                             toast.show();
+                                         }
+                                     });
+                             alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                 @Override
+                                 public void onClick(DialogInterface dialog, int which) {
+                                     Toast toast = Toast.makeText(getActivity(), R.string.contactsAreNot, Toast.LENGTH_LONG);
+                                     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                                     toast.show();
+                                 }
+                             });
+                             alert.create().show();
+
+
 
                          }
                           else {
@@ -292,6 +320,13 @@ public class SettingsFragment extends Fragment {
 
     private void getDataFirebase() {
 
+        final ProgressDialog progressDialog3 = new ProgressDialog(getActivity());
+
+        progressDialog3.setTitle(getString(R.string.uploading));
+        progressDialog3.setMessage(getString(R.string.ContactAreUploading));
+        progressDialog3.setCanceledOnTouchOutside(true);
+        progressDialog3.show();
+
         final DatabaseReference referenceDelete = firebaseDatabase.getReference("Users")
                 .child(validUser).child("contacts");
 
@@ -302,6 +337,8 @@ public class SettingsFragment extends Fragment {
                 userName.clear();
                 userPhone.clear();
                 userID.clear();
+
+
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
                     if (contact.getName() != null && contact.getPhone() != null) {
@@ -337,6 +374,7 @@ public class SettingsFragment extends Fragment {
                         }
                     }
                 }
+                progressDialog3.dismiss();
             }
 
             @Override
@@ -353,6 +391,8 @@ public class SettingsFragment extends Fragment {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
+
+
             Toast toast = Toast.makeText(getActivity(), R.string.PleaseWait, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
             toast.show();
@@ -367,12 +407,7 @@ public class SettingsFragment extends Fragment {
             String column = ContactsContract.Contacts.DISPLAY_NAME;
             String col = ContactsContract.CommonDataKinds.Phone.NUMBER;
 
-            progressDialog2 = new ProgressDialog(getActivity());
 
-            progressDialog2.setTitle(getString(R.string.uploading));
-            progressDialog2.setMessage(getString(R.string.ContactAreUploading));
-            progressDialog2.setCanceledOnTouchOutside(true);
-            progressDialog2.show();
 
             while (phone.moveToNext()) {
 
@@ -389,7 +424,6 @@ public class SettingsFragment extends Fragment {
                     databaseReference.setValue(contact);
                 }
             }
-            progressDialog2.dismiss();
             phone.close();
         } else {
             Toast toast = Toast.makeText(getActivity(), R.string.PleaseGivePermission, Toast.LENGTH_LONG);
@@ -454,17 +488,15 @@ public class SettingsFragment extends Fragment {
                 .child(validUser).child("contacts");
         databaseReference.removeValue();
     }
+
     public void importContacts(){
 
-        progressDialog = new ProgressDialog(getActivity());
-
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
         progressDialog.setTitle(getString(R.string.uploading));
         progressDialog.setMessage(getString(R.string.ContactAreUploading));
         progressDialog.setCanceledOnTouchOutside(true);
         progressDialog.show();
-
-
 
         DatabaseReference reference = firebaseDatabase.getReference("Users");
         reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
@@ -478,12 +510,7 @@ public class SettingsFragment extends Fragment {
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
 
-
-
                     if (contact.getName() != null && contact.getPhone() != null) {
-
-
-
 
                         String txt = contact.getName();
                         String txtphone = contact.getPhone();
@@ -523,21 +550,20 @@ public class SettingsFragment extends Fragment {
                                     .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
                                             ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
                                     .build());
-
                         }
+
                         try {
                             Context appContext = ContactList.getContextOfApplication();
                             appContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                            progressDialog.dismiss();
-//                                                 Toast toast = Toast.makeText(getActivity(), "Contacts uploaded to your phone book.", Toast.LENGTH_LONG);
-//                                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-//                                                 toast.show();
+
+
+
                         } catch (Exception e) {
                             e.printStackTrace();
-                            progressDialog.dismiss();
                         }
                     }
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -549,13 +575,13 @@ public class SettingsFragment extends Fragment {
 
     public void importContacts2(){
 
-        progressDialog = new ProgressDialog(getActivity());
-
-
-        progressDialog.setTitle(getString(R.string.uploading));
-        progressDialog.setMessage(getString(R.string.ContactAreUploading));
-        progressDialog.setCanceledOnTouchOutside(true);
-        progressDialog.show();
+//        progressDialog = new ProgressDialog(getActivity());
+//
+//
+//        progressDialog.setTitle(getString(R.string.uploading));
+//        progressDialog.setMessage(getString(R.string.ContactAreUploading));
+//        progressDialog.setCanceledOnTouchOutside(true);
+//        progressDialog.show();
 
 
         DatabaseReference reference = firebaseDatabase.getReference("Users");
@@ -625,13 +651,13 @@ public class SettingsFragment extends Fragment {
                         try {
                             Context appContext = ContactList.getContextOfApplication();
                             appContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                            progressDialog.dismiss();
+ //                           progressDialog.dismiss();
 //                                                 Toast toast = Toast.makeText(getActivity(), "Contacts uploaded to your phone book.", Toast.LENGTH_LONG);
 //                                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
 //                                                 toast.show();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            progressDialog.dismiss();
+   //                         progressDialog.dismiss();
                         }
             }
 

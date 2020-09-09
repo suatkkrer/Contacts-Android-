@@ -80,4 +80,5 @@
     <string name="duplicatedDelete">Your all duplicated contacts will be deleted. Are you sure?</string>
     <string name="duplicatedDeleted">Your duplicated contacts are deleted</string>
     <string name="there_is_no_duplicated_contact">There is no duplicated contact</string>
+    <string name="exportContacts">You are going to upload your app contacts to your phone book. Are you sure?</string>
 </resources>
