@@ -74,12 +74,6 @@ public class SettingsFragment extends Fragment {
     int progress5 = 0;
 
 
-
-
-
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,7 +85,7 @@ public class SettingsFragment extends Fragment {
 
         settings.add(getString(R.string.importToApp));
         settings.add(getString(R.string.exportToPhoneBook));
-        settings.add(getString(R.string.deleteDuplicated));
+       // settings.add(getString(R.string.deleteDuplicated));
         settings.add(getString(R.string.DeleteContactFromApp));
         settings.add(getString(R.string.logOut));
 
@@ -119,9 +113,9 @@ public class SettingsFragment extends Fragment {
 //                                     thread.start();
                                      bringContacts2();
 
-//                                     Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
-//                                     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-//                                     toast.show();
+//                             Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
+//                             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+//                             toast.show();
 
                                      ContactFragment contactFragment = new ContactFragment();
                                      FragmentManager manager = getFragmentManager();
@@ -205,7 +199,8 @@ public class SettingsFragment extends Fragment {
                                          }
                                      }).show();
                          }
-                     }  else if (position ==2){
+                     }
+                    /* else if (position ==2){
                          AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                          alert.setTitle(R.string.sureAre);
                          alert.setMessage(R.string.duplicatedDelete);
@@ -225,10 +220,8 @@ public class SettingsFragment extends Fragment {
                              }
                          });
                          alert.create().show();
-
-
-                     }
-                    else if (position == 3) {
+                     }*/
+                    else if (position == 2) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle(R.string.sureAre);
                         alert.setMessage(R.string.contactWillBe);
@@ -253,7 +246,7 @@ public class SettingsFragment extends Fragment {
                         alert.create().show();
                         
                      }
-                    else if (position == 4) {
+                    else if (position == 3) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle(R.string.AreSure);
                         alert.setMessage(R.string.LogOutt);
