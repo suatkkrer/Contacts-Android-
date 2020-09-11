@@ -41,6 +41,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SettingsFragment extends Fragment {
 
@@ -65,6 +67,14 @@ public class SettingsFragment extends Fragment {
     ArrayList<String> bringName;
     ArrayList<String> bringPhone;
     ArrayList<String> bringId;
+    ArrayList<String> phoneDup;
+    ArrayList<String> nameDup;
+    int progress = 0;
+    int progress4 = 0;
+    int progress5 = 0;
+
+
+
 
 
 
@@ -78,6 +88,7 @@ public class SettingsFragment extends Fragment {
         thisContext = container.getContext();
         listView = v.findViewById(R.id.settingsList);
         final ArrayList<String> settings = new ArrayList<>();
+
         settings.add(getString(R.string.importToApp));
         settings.add(getString(R.string.exportToPhoneBook));
         settings.add(getString(R.string.deleteDuplicated));
@@ -104,28 +115,19 @@ public class SettingsFragment extends Fragment {
                                  @Override
                                  public void onClick(DialogInterface dialog, int which) {
 
-                                     final ProgressDialog progressDialog2 = new ProgressDialog(getActivity());
+//                                     ExampleThread thread = new ExampleThread();
+//                                     thread.start();
+                                     bringContacts2();
 
-                                     progressDialog2.setTitle(getString(R.string.uploading));
-                                     progressDialog2.setMessage(getString(R.string.ContactAreUploading));
-                                     progressDialog2.setCanceledOnTouchOutside(true);
-                                     progressDialog2.show();
-
-                                     bringContacts();
-
-                                     progressDialog2.dismiss();
-
-                                     Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
-                                     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-                                     toast.show();
+//                                     Toast toast = Toast.makeText(getActivity(), R.string.contactsUploaded, Toast.LENGTH_LONG);
+//                                     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+//                                     toast.show();
 
                                      ContactFragment contactFragment = new ContactFragment();
                                      FragmentManager manager = getFragmentManager();
                                      manager.beginTransaction()
                                              .replace(R.id.fragment_container,contactFragment,contactFragment.getTag())
                                              .commit();
-
-
 
                                  }
                              });
@@ -169,9 +171,7 @@ public class SettingsFragment extends Fragment {
                                          @Override
                                          public void onClick(DialogInterface dialog, int which) {
                                              importContacts();
-                                             Toast toast = Toast.makeText(getActivity(), "Contacts are uploaded to your phone book.", Toast.LENGTH_LONG);
-                                             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-                                             toast.show();
+
                                          }
                                      });
                              alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -213,9 +213,7 @@ public class SettingsFragment extends Fragment {
                              @Override
                              public void onClick(DialogInterface dialog, int which) {
                                  getDataFirebase();
-                                 Toast toast = Toast.makeText(getActivity(), R.string.duplicatedDeleted, Toast.LENGTH_LONG);
-                                 toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
-                                 toast.show();
+
                              }
                          });
                          alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -301,12 +299,15 @@ public class SettingsFragment extends Fragment {
         bringName = new ArrayList<>();
         bringPhone = new ArrayList<>();
         bringId = new ArrayList<>();
+        nameDup = new ArrayList<>();
+        phoneDup = new ArrayList<>();
 
 
         mAuthorize = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         validUser = mAuthorize.getCurrentUser().getUid();
         reference = firebaseDatabase.getReference("Users");
+
 
 
 
@@ -322,10 +323,33 @@ public class SettingsFragment extends Fragment {
 
         final ProgressDialog progressDialog3 = new ProgressDialog(getActivity());
 
-        progressDialog3.setTitle(getString(R.string.uploading));
-        progressDialog3.setMessage(getString(R.string.ContactAreUploading));
-        progressDialog3.setCanceledOnTouchOutside(true);
+        progressDialog3.setTitle(getString(R.string.Deleting));
+        progressDialog3.setMessage(getString(R.string.contactsDeleting));
+        // progressDialog3.setProgressStyle(progressDialog3.STYLE_HORIZONTAL);
+        progressDialog3.setMax(100);
         progressDialog3.show();
+        progressDialog3.setCancelable(false);
+        progressDialog3.setCanceledOnTouchOutside(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (progress < 100)
+                {
+                    try {
+                        Thread.sleep(200);
+                        progress++;
+                        progressDialog3.setProgress(progress);
+                        if (progress == 100) {
+                            progressDialog3.dismiss();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
 
         final DatabaseReference referenceDelete = firebaseDatabase.getReference("Users")
                 .child(validUser).child("contacts");
@@ -337,8 +361,6 @@ public class SettingsFragment extends Fragment {
                 userName.clear();
                 userPhone.clear();
                 userID.clear();
-
-
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
                     if (contact.getName() != null && contact.getPhone() != null) {
@@ -353,7 +375,7 @@ public class SettingsFragment extends Fragment {
 
                 for (int i = 0; i < userName.size(); i++) {
                     if (userNameDuplicated2.contains(userName.get(i))) {
-                        break;
+                        continue;
                     }
                     for (int j = i + 1; j < userName.size(); j++) {
                         if (userName.get(i).equals(userName.get(j)) && !userNameDuplicated2.contains(userName.get(i))) {
@@ -374,7 +396,6 @@ public class SettingsFragment extends Fragment {
                         }
                     }
                 }
-                progressDialog3.dismiss();
             }
 
             @Override
@@ -383,11 +404,48 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Toast toast = Toast.makeText(getActivity(), R.string.duplicatedDeleted, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+        toast.show();
+
 
     }
 
 
     public void bringContacts(){
+
+        final ProgressDialog progressDialog4 = new ProgressDialog(getActivity());
+
+        progressDialog4.setTitle(getString(R.string.uploading));
+        progressDialog4.setMessage(getString(R.string.ContactAreUploading));
+       // progressDialog4.setProgressStyle(progressDialog4.STYLE_HORIZONTAL);
+        progressDialog4.setMax(100);
+        progressDialog4.show();
+        progressDialog4.setCancelable(false);
+        progressDialog4.setCanceledOnTouchOutside(false);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (progress4 < 100)
+                {
+                    try {
+                        Thread.sleep(200);
+                        progress4++;
+                        progressDialog4.setProgress(progress);
+                        if (progress4 == 100) {
+                            progressDialog4.dismiss();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
+
+
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
@@ -425,6 +483,7 @@ public class SettingsFragment extends Fragment {
                 }
             }
             phone.close();
+
         } else {
             Toast toast = Toast.makeText(getActivity(), R.string.PleaseGivePermission, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
@@ -433,6 +492,37 @@ public class SettingsFragment extends Fragment {
     }
 
     public void bringContacts2(){
+
+        final ProgressDialog progressDialog4 = new ProgressDialog(getActivity());
+
+        progressDialog4.setTitle(getString(R.string.uploading));
+        progressDialog4.setMessage(getString(R.string.ContactAreUploading));
+        // progressDialog4.setProgressStyle(progressDialog4.STYLE_HORIZONTAL);
+        progressDialog4.setMax(100);
+        progressDialog4.show();
+        progressDialog4.setCancelable(false);
+        progressDialog4.setCanceledOnTouchOutside(false);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (progress4 < 100)
+                {
+                    try {
+                        Thread.sleep(200);
+                        progress4++;
+                        progressDialog4.setProgress(progress);
+                        if (progress4 == 100) {
+                            progressDialog4.dismiss();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
@@ -457,23 +547,37 @@ public class SettingsFragment extends Fragment {
                 bringPhone.add(number);
 
             }
-            System.out.println(bringName);
-            System.out.println(bringPhone);
             phone.close();
 
-            for (int i = 0; i < bringName.size() ; i++) {
+            for (int i = 0; i < bringPhone.size() ; i++) {
+                if (phoneDup.contains(bringPhone.get(i))){
+                    continue;
+                }
+                for (int j = i+1 ; j < bringPhone.size() ; j++) {
+                    if (bringPhone.get(i).equals(bringPhone.get(j)) && !phoneDup.contains(bringPhone.get(i))){
+                        phoneDup.add(bringPhone.get(i));
+                        nameDup.add(bringName.get(i));
+                    }
+                }
+
 
      //           if (name != null && number != null) {
-                    id = reference.push().getKey();
 
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
-                            .child(validUser).child("contacts").child(id);
-                    Contact contact = new Contact(id, bringName.get(i), bringPhone.get(i));
-
-                    databaseReference.setValue(contact);
          //       }
 
             }
+
+            for (int i = 0; i < nameDup.size(); i++) {
+                id = reference.push().getKey();
+
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+                        .child(validUser).child("contacts").child(id);
+                Contact contact = new Contact(id, nameDup.get(i), phoneDup.get(i));
+
+                databaseReference.setValue(contact);
+            }
+
+
 
         } else {
             Toast toast = Toast.makeText(getActivity(), R.string.PleaseGivePermission, Toast.LENGTH_LONG);
@@ -495,8 +599,32 @@ public class SettingsFragment extends Fragment {
 
         progressDialog.setTitle(getString(R.string.uploading));
         progressDialog.setMessage(getString(R.string.ContactAreUploading));
-        progressDialog.setCanceledOnTouchOutside(true);
+      //  progressDialog.setProgressStyle(progressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
         progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(true);
+        progressDialog.setCancelable(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (progress5 < 100)
+                {
+                    try {
+                        Thread.sleep(200);
+                        progress5++;
+                        progressDialog.setProgress(progress);
+                        if (progress5 == 100) {
+                            progressDialog.dismiss();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
+
 
         DatabaseReference reference = firebaseDatabase.getReference("Users");
         reference.child(validUser).child("contacts").addValueEventListener(new ValueEventListener() {
@@ -564,6 +692,9 @@ public class SettingsFragment extends Fragment {
                     }
                 }
                 progressDialog.dismiss();
+                Toast toast = Toast.makeText(getActivity(), "Contacts are uploaded to your phone book.", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL,0,600);
+                toast.show();
             }
 
             @Override
@@ -575,13 +706,12 @@ public class SettingsFragment extends Fragment {
 
     public void importContacts2(){
 
-//        progressDialog = new ProgressDialog(getActivity());
-//
-//
-//        progressDialog.setTitle(getString(R.string.uploading));
-//        progressDialog.setMessage(getString(R.string.ContactAreUploading));
-//        progressDialog.setCanceledOnTouchOutside(true);
-//        progressDialog.show();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
+        progressDialog.setTitle(getString(R.string.uploading));
+        progressDialog.setMessage(getString(R.string.ContactAreUploading));
+        progressDialog.setCanceledOnTouchOutside(true);
+        progressDialog.show();
 
 
         DatabaseReference reference = firebaseDatabase.getReference("Users");
@@ -596,7 +726,6 @@ public class SettingsFragment extends Fragment {
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Contact contact = snapshot1.getValue(Contact.class);
 
-
                     if (contact.getName() != null && contact.getPhone() != null) {
 
 
@@ -608,6 +737,8 @@ public class SettingsFragment extends Fragment {
                         userID.add(userid);
                     }
                 }
+
+                System.out.println(userName);
 
 
 
@@ -658,6 +789,8 @@ public class SettingsFragment extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
    //                         progressDialog.dismiss();
+                        } finally {
+                            progressDialog.dismiss();
                         }
             }
 
@@ -667,6 +800,36 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+    }
+    class ExampleThread extends Thread{
+        @Override
+        public void run() {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+                String name = null;
+                String number = null;
+
+                Cursor phone = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null, null, null, ContactsContract.Contacts.DISPLAY_NAME);
+
+                while (phone.moveToNext()) {
+
+                    name = phone.getString(phone.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    number = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                    if (name != null && number != null) {
+                        id = reference.push().getKey();
+
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+                                .child(validUser).child("contacts").child(id);
+                        Contact contact = new Contact(id, name, number);
+
+                        databaseReference.setValue(contact);
+                    }
+                }
+                phone.close();
+            }
+        }
     }
     }
 

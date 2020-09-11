@@ -108,7 +108,7 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
 
                 for (int i = 0; i < userName.size(); i++) {
                     if (userNameDuplicated2.contains(userName.get(i))){
-                        break;
+                        continue;
                     }
                     for (int j = i + 1 ; j < userName.size(); j++) {
                         if (userName.get(i).equals(userName.get(j)) && !userNameDuplicated2.contains(userName.get(i))){
@@ -123,6 +123,7 @@ public class DuplicateFragment extends Fragment  implements RecylerViewAdapter.O
                         }
                     }
                 }
+
                 recylerViewAdapter.notifyDataSetChanged();
                 if (recylerViewAdapter.getItemCount() == 0){
                     duplicatedText.setVisibility(View.VISIBLE);
