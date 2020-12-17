@@ -49,16 +49,6 @@ public class EditActivity extends AppCompatActivity {
         name_id.getEditText().setText(name);
         phone_id.getEditText().setText(phone);
 
-//        if (name == null || phone == null || id == null){
-//            Intent intent1 = getIntent();
-//            name2 = intent1.getStringExtra("nameDuplicated");
-//            phone2 = intent1.getStringExtra("phoneDuplicated");
-//            id2 = intent1.getStringExtra("idDuplicated");
-//            name_id.getEditText().setText(name2);
-//            phone_id.getEditText().setText(phone2);
-//        }
-
-
 
 
     }
